@@ -41,11 +41,11 @@ namespace WebApiClient
             return await new Client().SendAsync(request);
         }
 
-        public static HttpRequestMessage AddNewUserRequestConstruct(User client, string uri)
+        public static HttpRequestMessage AddNewUserRequestConstruct(User server, string uri)
         {
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri($"{uri}/ApiUser/CreateUser?name={client.Name}&surname={client.Surname}&login={client.Login}"),
+                RequestUri = new Uri($"{uri}/ApiUser/CreateUser?name={server.Name}&surname={server.Surname}&login={server.Login}"),
                 Method = HttpMethod.Post,
             };
             return request;

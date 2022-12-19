@@ -1,70 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using ValueObjects;
 
 namespace WebAPI.Server.Services
 {
-    public class UserServiceWithList : IUserService
+    public class UserServiceWithList: IUserService
     {
-        private static List<User> Users { get; }
+        private static List<UserServer> Users { get; }
         private static int nextId = 7;
 
         static UserServiceWithList()
         {
-            var u = new User(20, "Vadim", "Bykov", "Zhuzha");
-            var t = new TimeInterval(DateTime.Today.AddHours(10), DateTime.Today.AddHours(12));
-            u.Events.Add(new Event("OOP",
-                new GoalType("type", new ColorARGB(Color.Aqua.A, Color.Aqua.R, Color.Aqua.G, Color.Aqua.B)), t));
-            Users = new List<User>()
+            var u = new UserServer(20, "Vadim", "Bykov", "Zhuzha");
+            var d = new Day(DateTime.Today);
+            var t = new TimeInterval(DateTime.Today.AddDays(1), DateTime.Today.AddDays(1).AddHours(1));
+            //d.Events.Add(new Event("OOP", timeInterval:t));
+            Users = new List<UserServer>() 
             {
-                new User(10, "German", "Markov", "Nobody"),
-                new User(23, "Alina", "Valitova", "kissliinka"),
+                new UserServer(10, "German", "Markov","Nobody"),
+                new UserServer(23, "Alina", "Valitova", "kissliinka"),
                 u
             };
         }
 
-        public List<User> GetAll() => Users;
-        public User? GetById(int id) => Users.FirstOrDefault(u => u.Id == id);
-        public User? GetByLogin(string login) => Users.FirstOrDefault(u => u.Login == login);
+        public  List<UserServer> GetAll() => Users;
+        public  UserServer? GetById(int id) => Users.FirstOrDefault(u => u.Id == id);
+        public UserServer? GetByLogin(string login) => Users.FirstOrDefault(u => u.Login == login);
 
-        public void Add(User user)
+        public void Add(UserServer userServer)
         {
-            user.Id = nextId++;
-            Users.Add(user);
+            userServer.Id = nextId++;
+            Users.Add(userServer);
         }
-
-        public User? Delete(int id)
+        
+        public  UserServer? Delete(int id)
         {
             var user = GetById(id);
-            if (user is null)
+            if(user is null)
                 return null;
 
             Users.Remove(user);
             return user;
         }
-
-        public bool Update(int id, User user)
+        
+        public bool Update(int id, UserServer userServer)
         {
-            var index = Users.FindIndex(p => p.Id == user.Id);
-            if (index == -1)
+            var index = Users.FindIndex(p => p.Id == userServer.Id);
+            if(index == -1)
                 return false;
-
-            Users[index] = user;
+            
+            Users[index] = userServer;
             return true;
         }
-
-        public User Register(RegisterRequest model)
+        
+        public UserServer Register(RegisterRequest model)
         {
             if (Users.Any(u => u.Login == model.Login))
                 throw new ArgumentException($"Login {model.Login} is taken");
-            var user = new ServerUser(nextId++, model.Name, model.Surname, model.Login, model.Password);
+            var user = new UserServer(nextId++, model.Name, model.Surname, model.Login, model.Password);
             Users.Add(user);
             return user;
         }
 
-        public bool IsLoginExist(string login)
+        public  bool IsLoginExist(string login)
         {
             return GetByLogin(login) is not null;
         }

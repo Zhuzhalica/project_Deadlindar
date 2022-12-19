@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
@@ -20,23 +21,23 @@ namespace WebAPI.Server.Controllers
         private readonly ILogger<ApiUser> logger;
         private readonly IUserService _userService;
 
-        public ApiUser(ILogger<ApiUser> logger, IUserService userService)
+        public ApiUser(ILogger<ApiUser> logger)
         {
             this.logger = logger;
             this.logger.LogInformation("User logger called");
-            _userService = userService;
+            _userService = new UserServiceDatabase();
         }
 
         //[AllowAnonymous]
         [HttpGet(Name = "GetUsers")]
-        public IEnumerable<User> GetUsers()
+        public IEnumerable<UserServer> GetUsers()
         {
             logger.LogInformation(MyLogEvents.GetItem, "Get users");
             return _userService.GetAll();
         }
         
         [HttpGet("{login}")]
-        public ActionResult<User> GetByLogin(string login)
+        public ActionResult<UserServer> GetByLogin(string login)
         {
             logger.LogInformation(MyLogEvents.GetItem, $"Get item {login}");
             var user = _userService.GetByLogin(login);
@@ -49,14 +50,14 @@ namespace WebAPI.Server.Controllers
         }
 
         [HttpPost("CreateUser")]
-        public ActionResult<User> Create(string name, string surname, string login)
+        public ActionResult<UserServer> Create(string name, string surname, string login)
         {
-            if (_userService.IsLoginExist(login))
+            if (!_userService.IsLoginExist(login))
             {
                 logger.LogWarning(MyLogEvents.GenerateItems, $"Login {login} is exist");
                 return BadRequest();
             }
-            var user = new User(0, name, surname, login);
+            var user = new UserServer(0, name, surname, login);
             _userService.Add(user);
             logger.LogInformation(MyLogEvents.InsertItem, $"Create new user");
             return user;
@@ -64,9 +65,9 @@ namespace WebAPI.Server.Controllers
         
         
         [HttpPut("{id}")]
-        public ActionResult<User> Update(int id, User user)
+        public ActionResult<UserServer> Update(int id, UserServer userServer)
         {
-            var result = _userService.Update(id, user);
+            var result = _userService.Update(id, userServer);
             if (!result)
             {
                 logger.LogWarning(MyLogEvents.UpdateItemNotFound, $"Not  update");
@@ -77,7 +78,7 @@ namespace WebAPI.Server.Controllers
         }
         
         [HttpDelete("{id}")]
-        public ActionResult<User> Delete(int id)
+        public ActionResult<UserServer> Delete(int id)
         {
             var user = _userService.Delete(id);
             if (user is null)
@@ -88,17 +89,5 @@ namespace WebAPI.Server.Controllers
             logger.LogInformation(MyLogEvents.DeleteItem, $"User delete");
             return Ok(user);
         }
-        
-        // [HttpPost("AddEvent")]
-        // public void Create(string login, Event _event)
-        // {
-        //     _userService.AddEvent(login, _event);
-        // }
-        //
-        // [HttpDelete("DeleteEvent")]
-        // public void Delete(string login, Event _event)
-        // {
-        //     _userService.DeleteEvent(login, _event);
-        // }
     }
 }

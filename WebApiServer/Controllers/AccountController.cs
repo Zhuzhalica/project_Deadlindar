@@ -1,85 +1,93 @@
-﻿using System.Collections.Generic;
+﻿
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Deadlindar.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using NuGet.Protocol;
 using ValueObjects;
 using WebAPI.Server.Services;
 
 namespace WebAPI.Server.Controllers
 {
-    public class AccountController : Controller
+    [Route("[controller]")]
+    [ApiController]
+    public class AccountController :Controller
     {
+        private HttpContext context => HttpContext;
+        private IUserService userService;
         private readonly ILogger<AccountController> logger;
-        private readonly IUserService _userService;
-
-        public AccountController(ILogger<AccountController> logger, IUserService userService)
+        
+        public AccountController(ILogger<AccountController> logger)
         {
             this.logger = logger;
-            this.logger.LogInformation("Account logger called");
-            _userService = userService;
-        }
-        // GET
-        //[AllowAnonymous]
-        [HttpPost("Register")]
-        [ValidateAntiForgeryToken]
-        public ActionResult<User> Register(RegisterRequest model)
-        {
-            if (model.IsValid)
-            {
-                try
-                {
-                    var user = _userService.Register(model);
-                    logger.LogInformation(MyLogEvents.InsertItem, $"Register new user");
-                    Authenticate(model.Login);
-                    return user;
-                }
-                catch
-                {
-                    logger.LogWarning(MyLogEvents.GenerateItems, $"Non register");
-                    return NotFound();
-                }
-            }
-            return null;
+            userService = new UserServiceDatabase();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(AuthenticateRequest model)
+        [AllowAnonymous]
+        [HttpGet("/login")]
+        public ActionResult<LoginResponse> Login2([FromQuery] LoginRequest request)
         {
-            if (ModelState.IsValid)
+            var user = userService.GetByLogin(request.Login);
+            if (user is null || user.Password != request.Password)
             {
-                var user = _userService.GetByLogin(model.Login);
-                if (user != null)
-                {
-                    Authenticate(model.Login); // аутентификация
-                    return Ok();
-                }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                logger.LogWarning(MyLogEvents.GetItemNotFound, $" {request.Login} isn't exist");
+                return BadRequest(user);
+                    
             }
-
-            return null;
+            logger.LogInformation(MyLogEvents.GetItem, $"Login {request.Login} ");
+            return Ok(new LoginResponse()
+            {
+                Id = Convert.ToInt32(user.Id),
+                Cookie = SetCookie(user).ToString(),
+                Login = user.Login,
+                Name = user.Name
+            });
         }
         
-        private void Authenticate(string login)
+        [HttpGet("/logout")]
+        public ActionResult<UserServer> Logout()
         {
-            // создаем один claim
+            logger.LogInformation(MyLogEvents.DeleteItem, $"Logout");
+            context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("/register")]
+        public ActionResult<RegistrationResponse> Register([FromQuery] RegisterRequest model)
+        {
+            if (userService.IsLoginExist(model.Login))
+            {
+                logger.LogWarning(MyLogEvents.GenerateItems, $"Login {model.Login} is exist");
+                return BadRequest();
+            }
+            logger.LogInformation(MyLogEvents.GenerateItems, $"Register new user");
+            var user = new UserServer(0, model.Name, model.Surname, model.Login);
+            userService.Add(user);
+            return Ok(new RegistrationResponse(){UserId = user.Id, Cookies = SetCookie(user).ToString()});
+        } 
+        
+        private List<Claim> SetCookie(UserServer userServer)
+        {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, login)
+                new (ClaimTypes.Name, userServer.Login), new (ClaimTypes.UserData, userServer.Password)
+                , new(ClaimsIdentity.DefaultRoleClaimType, userServer.Role.ToString())
             };
             // создаем объект ClaimsIdentity
-            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-            // установка аутентификационных куки
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
-        }
-        
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+            context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+            return claims;
         }
     }
 }

@@ -16,42 +16,42 @@ namespace WebAPI.Server.Services
         {
            userContext = new UserContext(new DbContextOptions<UserContext>());
         }
-        public List<User> GetAll()
+        public List<UserServer> GetAll()
         {
-            using (UserContext db = userContext)
+            using (UserContext db = new())
             {
                 return db.Users.ToList();
             }
         }
 
-        public User? GetById(int id)
+        public UserServer? GetById(int id)
         {
-            using (UserContext db = userContext)
+            using (UserContext db = new())
             {
                 return db.Users.FirstOrDefault(u => u.Id == id);
             }
         }
 
-        public User? GetByLogin(string login)
+        public UserServer? GetByLogin(string login)
         {
-            using (UserContext db = userContext)
+            using (UserContext db = new())
             {
                 return db.Users.FirstOrDefault(u => u.Login == login);
             }
         }
 
-        public void Add(User user)
+        public void Add(UserServer userServer)
         {
-            using (UserContext db = userContext)
+            using (UserContext db = new())
             {
-                db.Users.Add(user);
+                db.Users.Add(userServer);
                 db.SaveChanges();
             }
         }
 
-        public User? Delete(int id)
+        public UserServer? Delete(int id)
         {
-            using (UserContext db = userContext)
+            using (UserContext db = new())
             {
                 var user = GetById(id);
                 if (user is null)
@@ -62,9 +62,9 @@ namespace WebAPI.Server.Services
             }
         }
 
-        public bool Update(int id, User user)
+        public bool Update(int id, UserServer userServer)
         {
-            using (UserContext db = userContext)
+            using (UserContext db = new())
             {
                 var u = Delete(id);
                 if (u is null)
@@ -74,13 +74,13 @@ namespace WebAPI.Server.Services
             }
         }
 
-        public User Register(RegisterRequest model)
+        public UserServer Register(RegisterRequest model)
         {
-            using (UserContext db = userContext)
+            using (UserContext db = new())
             {
                 if (db.Users.Any(u => u.Login == model.Login))
                     throw new ArgumentException($"Login {model.Login} is taken");
-                var user = new ServerUser(100, model.Name, model.Surname, model.Login, model.Password);
+                var user = new UserServer(100, model.Name, model.Surname, model.Login, model.Password);
                 db.Users.Add(user);
                 db.SaveChanges();
                 return user;
