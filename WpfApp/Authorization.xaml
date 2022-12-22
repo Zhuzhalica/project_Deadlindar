@@ -1,0 +1,22 @@
+﻿<Window x:Class="WpfApp.Authorization"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:WpfApp"
+        mc:Ignorable="d"
+        Title="authorization" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0" Grid.Row="0" Content="Логин:"/>
+        <TextBox x:Name="guiEnterLogin" Grid.Column="1" Grid.Row="0"/>
+        <Button x:Name="guiEventEditSave" Click="GuiEnterLogin_Click" Grid.Column="1" Grid.Row="1" Content="Enter" HorizontalAlignment="Left" Width="100"/>
+    </Grid>
+</Window>
