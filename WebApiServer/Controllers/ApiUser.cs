@@ -16,7 +16,7 @@ namespace WebAPI.Server.Controllers
     //[Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class ApiUser : ControllerBase
+    public class ApiUser : Controller
     {
         private readonly ILogger<ApiUser> logger;
         private readonly IUserService _userService;

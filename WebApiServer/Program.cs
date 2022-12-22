@@ -19,8 +19,8 @@ using WebAPI.Server.Services;
 var builder = WebApplication.CreateBuilder(args);
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
-// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//     .AddCookie(options => options.LoginPath = "/login");// Add services to the container.
+builder.Services.AddDbContext<EventContext>(options => 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 

@@ -41,7 +41,6 @@ namespace ValueObjects
             this.Surname = surname;
             this.Login = login;
             this.Status = UserStatus.Approved;
-            //DaysWithEvents = new HashSet<Day>();
             this.Password = "";
             this.Role = Role.Anonym;
         }

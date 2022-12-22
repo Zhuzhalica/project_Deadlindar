@@ -13,9 +13,9 @@ namespace WebAPI.Server.Services
         static UserServiceWithList()
         {
             var u = new UserServer(20, "Vadim", "Bykov", "Zhuzha");
-            var d = new Day(DateTime.Today);
-            var t = new TimeInterval(DateTime.Today.AddDays(1), DateTime.Today.AddDays(1).AddHours(1));
-            //d.Events.Add(new Event("OOP", timeInterval:t));
+            // var d = new Day(DateTime.Today);
+            // var t = new TimeInterval(DateTime.Today.AddDays(1), DateTime.Today.AddDays(1).AddHours(1));
+            // //d.Events.Add(new Event("OOP", timeInterval:t));
             Users = new List<UserServer>() 
             {
                 new UserServer(10, "German", "Markov","Nobody"),
