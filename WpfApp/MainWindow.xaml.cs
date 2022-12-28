@@ -1,23 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using ClientModels;
 using ValueObjects;
 using WpfLibrary;
-using WpfObjects;
 
 namespace WpfApp
 {
@@ -36,7 +22,7 @@ namespace WpfApp
             guicScheduleDay.IntervalHeight = 25.0;
             guicScheduleDay.Interval = new TimeSpan(1, 0, 0);
 
-            foreach (var _event in App.Handler.Events)
+            foreach (var _event in App.Handler.ClientEvents.Events)
                 guicScheduleDay.Add(new ScheduleItem(_event));
             
             guicScheduleMonth.CalendarMonth();

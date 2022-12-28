@@ -2,6 +2,7 @@
 {
     public class Notification
     {
+        public string Title { get; set; }
         public string Text { get; set; }
         public NotificationType Type { get; set; }
         public string Group { get; set; }

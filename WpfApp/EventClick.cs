@@ -19,7 +19,7 @@ namespace WpfApp
         private void GuiEventDelete_Click(object sender, RoutedEventArgs e)
         {
             var item = (guicEvent.DataContext as ScheduleItem)!;
-            
+
             App.Handler.Delete(item.Event);
 
             guicScheduleDay.RemoveWithRedraw(item);

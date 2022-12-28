@@ -5,11 +5,11 @@ namespace ClientModels
 {
     public interface IHandler
     {
-        User User { get; }
-        IReadOnlyList<Event> Events { get; }
-        IReadOnlyList<Notification> Notifications { get; }
+        ClientEvents ClientEvents { get; }
+        ClientNotifications ClientNotifications { get; }
+        ClientUser ClientUser { get; }
         string URI { get; }
-        void Setup(User user);
+        void Setup();
         void Add(Notification notification);
         void Delete(Notification notification);
         void Add(Event _event);
