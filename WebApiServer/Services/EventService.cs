@@ -4,6 +4,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using Deadlindar.Models;
 using Deadlindar.Repositories;
+using Deadlindar.Repositories.Json;
 using Microsoft.EntityFrameworkCore;
 using ValueObjects;
 using WebAPI.Server.Data;
@@ -14,9 +15,9 @@ namespace WebAPI.Server.Services
     {
         private IEventRepository _eventRepository;
         
-        public EventService()
+        public EventService(IEventRepository repository)
         {
-            _eventRepository = new EventRepository();
+            _eventRepository = repository;
         }
         
         public IEnumerable<Event> GetByLogin(string login)

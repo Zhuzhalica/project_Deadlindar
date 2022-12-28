@@ -14,7 +14,5 @@ namespace WebAPI.Server
         public string Login { get; set; }
         [Required]
         public string Password { get; set; }
-        [Required]
-        public int Role { get; set; }
     }
 }

@@ -19,10 +19,21 @@ namespace ClientModels
             ClientUser = clientUser;
         }
         
-        public void Setup()
+        public void Setup(string login)
         {
-            ClientEvents.TryGet(ClientUser.User.Login, URI);
-            ClientNotifications.TryGet(ClientUser.User.Login, URI);
+            ClientEvents.Setup(login);
+            var events = ClientEvents.TryGet(ClientUser.User, URI);
+            if (events == null)
+            {
+                // уведомление не удалось синхронизироваться с данными сервера
+            }
+            
+            ClientNotifications.Setup(login);
+            var notifications = ClientNotifications.TryGet(ClientUser.User, URI);
+            if (notifications == null)
+            {
+                // уведомление не удалось синхронизироваться с данными сервера
+            }
         }
 
         public void Add(Notification notification)
@@ -47,8 +58,8 @@ namespace ClientModels
 
         public void Dispose()
         {
-            ClientEvents.Dispose();
-            ClientNotifications.Dispose();
+            ClientEvents.Dispose(ClientUser.User, URI);
+            ClientNotifications.Dispose(ClientUser.User, URI);
         }
     }
 }

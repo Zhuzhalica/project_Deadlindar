@@ -26,18 +26,18 @@ namespace WebAPI.Server.Controllers
         private IUserService userService;
         private readonly ILogger<AccountController> logger;
         
-        public AccountController(ILogger<AccountController> logger)
+        public AccountController(ILogger<AccountController> logger, IUserService service)
         {
             this.logger = logger;
-            userService = new UserService();
+            userService = service;
         }
 
         [AllowAnonymous]
         [HttpGet("/login")]
-        public ActionResult<LoginResponse> Login2([FromQuery] LoginRequest request)
+        public ActionResult<LoginResponse> Login([FromQuery] LoginRequest request)
         {
             var user = userService.GetByLogin(request.Login);
-            if (user is null || user.Password != "")
+            if (user is null || user.Password != request.Password)
             {
                 logger.LogWarning(MyLogEvents.GetItemNotFound, $" {request.Login} isn't exist");
                 return BadRequest(user);
@@ -63,7 +63,7 @@ namespace WebAPI.Server.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("/register")]
+        [HttpPost("/register")]
         public ActionResult<RegistrationResponse> Register([FromQuery] RegisterRequest model)
         {
             if (userService.IsLoginExist(model.Login))

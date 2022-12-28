@@ -21,11 +21,11 @@ namespace WebAPI.Server.Controllers
         private readonly ILogger<ApiUser> logger;
         private readonly IUserService _userService;
 
-        public ApiUser(ILogger<ApiUser> logger)
+        public ApiUser(ILogger<ApiUser> logger, IUserService service)
         {
             this.logger = logger;
             this.logger.LogInformation("User logger called");
-            _userService = new UserService();
+            _userService = service;
         }
 
         //[AllowAnonymous]

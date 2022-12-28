@@ -110,11 +110,14 @@ namespace WpfLibrary
 
         public void Add(ScheduleItem item)
         {
-            var totalSeconds = TimeEnd.TotalSeconds - TimeStart.TotalSeconds;
-            item.GeneratePanel(_guicCanvas.ActualWidth, _guicCanvas.ActualHeight, TimeStart.TotalSeconds,
-                TimeEnd.TotalSeconds, totalSeconds);
-            Items.Add(item);
-            DrawItems();
+            if (!item.Event.IsDeleted)
+            {
+                var totalSeconds = TimeEnd.TotalSeconds - TimeStart.TotalSeconds;
+                item.GeneratePanel(_guicCanvas.ActualWidth, _guicCanvas.ActualHeight, TimeStart.TotalSeconds,
+                    TimeEnd.TotalSeconds, totalSeconds);
+                Items.Add(item);
+                DrawItems();
+            }
         }
 
         public void RemoveWithRedraw(ScheduleItem item)

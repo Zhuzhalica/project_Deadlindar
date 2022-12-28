@@ -26,6 +26,8 @@ namespace WpfApp
             container.Bind<IRequests<Event>>().To<EventRequests>().InSingletonScope();
             container.Bind<IRequests<Notification>>().To<NotificationRequests>().InSingletonScope();
             container.Bind<IRequests<User>>().To<UserRequests>().InSingletonScope();
+
+            container.Bind<IClientSaver>().To<JsonSaver>().InSingletonScope();
             
             container.Bind<ClientEvents>().To<ClientEvents>().InSingletonScope();
             container.Bind<ClientNotifications>().To<ClientNotifications>().InSingletonScope();

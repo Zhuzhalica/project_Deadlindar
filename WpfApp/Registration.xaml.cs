@@ -14,11 +14,12 @@ namespace WpfApp
         {
             var login = this.login.Text;
             var password = this.password.Text;
-            var user = App.Handler.ClientUser.TryGet(login, App.Handler.URI);
+            var u = new User(login, password);
+            var user = App.Handler.ClientUser.TryGet(u, App.Handler.URI);
             
             if (user is null)
             {
-                user = new User(name.Text, surname.Text, login);
+                user = new User(name.Text, surname.Text, login, password);
                 // TODO
             }
             else

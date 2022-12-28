@@ -15,10 +15,10 @@ namespace WebAPI.Server.Controllers
         private readonly ILogger<EventControllers> logger;
         private readonly IEventService _eventService;
 
-        public EventControllers(ILogger<EventControllers> logger)
+        public EventControllers(ILogger<EventControllers> logger, IEventService service)
         {
             this.logger = logger;
-            this._eventService = new EventService();
+            this._eventService = service;
         }
         
         [HttpGet(Name="GetEvents{login}")]
@@ -28,8 +28,8 @@ namespace WebAPI.Server.Controllers
             return _eventService.GetByLogin(login);
         }
         
-        [HttpPost(Name="Add")]
-        public ActionResult<Event> AddEvent(string login, [FromQuery] Event deadline)
+        [HttpPost("Add")]
+        public ActionResult<Event> AddEvent(string login, Event deadline)
         {
             
             _eventService.Add(login, deadline);
@@ -37,8 +37,8 @@ namespace WebAPI.Server.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete")]
-        public ActionResult<Event> Delete(string login, [FromQuery] Event deadline)
+        [HttpDelete("Delete")]
+        public ActionResult<Event> Delete(string login, Event deadline)
         {
             if (_eventService.Delete(login, deadline))
             {

@@ -9,15 +9,15 @@ namespace ClientModels
 {
     public class NotificationRequests: IRequests<Notification>
     {
-        private readonly string controllerName = "ApiUser";
-        public async Task<HttpResponseMessage> Get(string login, string uri)
+        private readonly string controllerName = "Notification";
+        public Task<HttpResponseMessage> Get(User user, string uri)
         {
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri($"{uri}/{controllerName}/{login}"),
+                RequestUri = new Uri($"{uri}/{controllerName}/{user.Login}"),
                 Method = HttpMethod.Get,
             };
-            return await new Client().SendAsync(request);
+            return new Client().SendAsync(request);
         }
 
         public async Task<HttpResponseMessage> Add(string login, Notification notification, string uri)

@@ -20,7 +20,7 @@ namespace WebAPI.Server.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var dataSource = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "user.db");
-            optionsBuilder.UseSqlite(@"Data Source=C:\Users\portu\Desktop\pDeadlindar\WebApiServer\AppData\users.db;");
+            optionsBuilder.UseSqlite(@"Data Source=C:\Users\portu\Desktop\pDeadlindar\WebApiServer\AppData\Db\users.db;");
         }
         public DbSet<UserServer> Users { get; set; } = null!;
 

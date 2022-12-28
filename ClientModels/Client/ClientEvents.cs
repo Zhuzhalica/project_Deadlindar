@@ -7,29 +7,57 @@ using ValueObjects;
 
 namespace ClientModels
 {
-    public class ClientEvents: IDisposable
+    public class ClientEvents : IDisposable, IPersistingClient
     {
-        [JsonIgnore]
-        private readonly IRequests<Event> Requests;
-        [JsonIgnore]
-        public IReadOnlyList<Event> Events => _Events.AsReadOnly();
+        [JsonIgnore] private readonly IRequests<Event> Requests;
+        [JsonIgnore] public IReadOnlyList<Event> Events => _Events.AsReadOnly();
         private List<Event> _Events { get; set; }
+        private IClientSaver Saver;
 
-        
-        public ClientEvents(IRequests<Event> requests)
+
+        public ClientEvents(IRequests<Event> requests, IClientSaver saver)
         {
             Requests = requests;
+            Saver = saver;
         }
 
-        public List<Event>? TryGet(string login, string uri)
+        public void Setup(string login)
         {
-            var content = Requests.Get(login, uri);
+            var clientEvents = Saver.Read<ClientEvents>(login);
+            if (clientEvents != null && clientEvents?._Events != null)
+                _Events = clientEvents._Events;
+            else
+                _Events = new List<Event>();
+        }
+
+        public List<Event>? TryGet(User user, string uri)
+        {
+            var content = Requests.Get(user, uri);
+            List<Event>? events = null;
             if (content.Result.IsSuccessStatusCode)
             {
-                _Events = ResponseInEvent(content.Result);
-            }
+                events = ResponseInEvent(content.Result);
+                if (_Events.Count != 0)
+                {
+                    foreach (var _event in _Events)
+                    {
+                        if (!events.Contains(_event))
+                        {
+                            TryAdd(user.Login, _event, uri);
+                            events.Add(_event);
+                        }
+                    }
+                    
+                }
 
-            return _Events;
+                _Events.Clear();
+                _Events.AddRange(events);
+                return events;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private List<Event>? ResponseInEvent(HttpResponseMessage content)
@@ -40,18 +68,31 @@ namespace ClientModels
         public bool TryAdd(string login, Event _event, string uri)
         {
             var response = Requests.Add(login, _event, uri);
+            _Events.Add(_event);
             return response.Result.IsSuccessStatusCode;
         }
 
         public bool TryDelete(string login, Event _event, string uri)
         {
             var response = Requests.Delete(login, _event, uri);
+            if (_Events.Contains(_event))
+            {
+                var index = _Events.IndexOf(_event);
+                _Events[index].IsDeleted = true;
+            }
+
             return response.Result.IsSuccessStatusCode;
+        }
+
+        public void Dispose(User user, string uri)
+        {
+            if (TryGet(user, uri) == null)
+                Saver.Save(user.Login, this);
+            Dispose();
         }
 
         public void Dispose()
         {
-            
         }
     }
 }

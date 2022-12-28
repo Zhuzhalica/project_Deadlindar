@@ -15,9 +15,9 @@ namespace ClientModels
             Requests = requests;
         }
 
-        public User? TryGet(string login, string uri)
+        public User? TryGet(User user, string uri)
         {
-            var content = Requests.Get(login, uri);
+            var content = Requests.Get(user, uri);
             if (content.Result.IsSuccessStatusCode)
             {
                 User = ResponseInUser(content.Result);
@@ -28,6 +28,8 @@ namespace ClientModels
 
         private User? ResponseInUser(HttpResponseMessage content)
         {
+            var t = content.Content;
+            var f = content.Content.ReadAsStringAsync().Result;
             return content.Content.ReadFromJsonAsync(typeof(User)).Result as User;
         }
 

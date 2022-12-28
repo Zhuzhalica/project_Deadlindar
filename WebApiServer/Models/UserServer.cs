@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using ValueObjects;
 
-namespace ValueObjects
+namespace WebAPI.Server
 {
     public enum Role
     {
@@ -14,26 +14,28 @@ namespace ValueObjects
         Member,
         Admin
     }
+
     public enum UserStatus
     {
         Submitted,
         Approved,
         Rejected
     }
-    public class UserServer: IUser
+
+    public class UserServer : IUser
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Login { get; set; }
-        [JsonIgnore]
-        public Role Role { get; set; }
-        [JsonIgnore]
-        public string Password { get; set; }
+        [JsonIgnore] public Role Role { get; set; }
+        [JsonIgnore] public string Password { get; set; }
+        [JsonIgnore] public UserStatus Status { get; set; }
 
-        public UserStatus Status { get; set; }
+        public UserServer()
+        {
+        }
 
-        public UserServer(){}
         public UserServer(int id, string name, string surname, string login)
         {
             this.Id = id;
@@ -44,6 +46,7 @@ namespace ValueObjects
             this.Password = "";
             this.Role = Role.Anonym;
         }
+
         public UserServer(int id, string name, string surname, string login, string password)
         {
             this.Id = id;
@@ -54,6 +57,7 @@ namespace ValueObjects
             this.Role = Role.Member;
             this.Password = password;
         }
+
         public UserServer(int id, string name, string surname, string login, string password, int role)
         {
             this.Id = id;

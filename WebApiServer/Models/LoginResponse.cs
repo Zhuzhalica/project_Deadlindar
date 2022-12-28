@@ -1,4 +1,6 @@
-﻿namespace WebAPI.Server
+﻿using System.Text.Json.Serialization;
+
+namespace WebAPI.Server
 {
     public class LoginResponse
     {
@@ -12,11 +14,12 @@
         //     Cookie = cookie;
         // }
 
-        public int Id { get; set; }
+        [JsonIgnore]public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Login { get; set; }
+        [JsonIgnore]
         public int Role { get; set; }
-        public string Cookie { get; set; }
+        [JsonIgnore]public string Cookie { get; set; }
     }
 }

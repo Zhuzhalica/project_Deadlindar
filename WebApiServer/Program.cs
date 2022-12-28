@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Text;
 using Deadlindar.Authorization;
 using Deadlindar.Models;
+using Deadlindar.Repositories;
+using Deadlindar.Repositories.Json;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +24,13 @@ builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(conne
 builder.Services.AddDbContext<EventContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddSingleton<INotificationRepository, NotificationRepositoryJson>();
+builder.Services.AddSingleton<IEventRepository, EventRepositoryJson>();
+builder.Services.AddSingleton<IUserRepository, UserRepositoryDatabase>();
 
+builder.Services.AddSingleton<INotificationService, NotificationService>();
+builder.Services.AddSingleton<IEventService, EventService>();
+builder.Services.AddSingleton<IUserService, UserService>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -92,8 +92,6 @@ namespace WpfLibrary
             return DateTime.Compare(x.Event.TimeInterval.startTime, y.Event.TimeInterval.startTime);
         }
 
-       
-
         public void DrawEvent()
         {
             throw new NotImplementedException();

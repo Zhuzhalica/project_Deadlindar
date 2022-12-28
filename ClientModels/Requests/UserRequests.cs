@@ -10,15 +10,16 @@ namespace ClientModels
 {
     public class UserRequests : IRequests<User>
     {
-        private readonly string controllerName = "ApiUser";
-        public async Task<HttpResponseMessage> Get(string login, string uri)
+        private readonly string controllerName = "Account";
+
+        public Task<HttpResponseMessage> Get(User user, string uri)
         {
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri($"{uri}/{controllerName}/{login}"),
+                RequestUri = new Uri($"{uri}/login?Login={user.Login}&Password={user.Password}"),
                 Method = HttpMethod.Get,
             };
-            return await new Client().SendAsync(request);
+            return new Client().SendAsync(request);
         }
 
         public async Task<HttpResponseMessage> Add(string login, User user, string uri)
@@ -27,7 +28,7 @@ namespace ClientModels
             {
                 RequestUri =
                     new Uri(
-                        $"{uri}/{controllerName}/CreateUser?name={user.Name}&surname={user.Surname}&login={user.Login}"),
+                        $"{uri}/register?Name={user.Name}&Surname={user.Surname}&Login={user.Login}&Password={user.Password}"),
                 Method = HttpMethod.Post,
             };
             return await new Client().SendAsync(request);

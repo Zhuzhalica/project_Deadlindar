@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using ClientModels;
 
 namespace WpfApp
 {
@@ -13,15 +14,16 @@ namespace WpfApp
         {
             var login = this.login.Text;
             var password = this.password.Password;
-            var user = App.Handler.ClientUser.TryGet(login, App.Handler.URI);
+            var u = new User(login, password);
+            var user = App.Handler.ClientUser.TryGet(u, App.Handler.URI);
 
             if (user is null)
             {
-                // TODO
+                Close();
             }
             else
             {
-                App.Handler.Setup();
+                App.Handler.Setup(user.Login);
                 var mainWindow = new MainWindow();
                 mainWindow.ShowWindow();
                 Close();

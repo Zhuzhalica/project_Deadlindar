@@ -9,7 +9,7 @@ namespace ClientModels
         ClientNotifications ClientNotifications { get; }
         ClientUser ClientUser { get; }
         string URI { get; }
-        void Setup();
+        void Setup(string login);
         void Add(Notification notification);
         void Delete(Notification notification);
         void Add(Event _event);

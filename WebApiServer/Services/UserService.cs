@@ -13,9 +13,9 @@ namespace WebAPI.Server.Services
     public class UserService: IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService()
+        public UserService(IUserRepository repository)
         {
-            _userRepository = new UserRepositoryDatabase();
+            _userRepository = repository;
         }
         public List<UserServer> GetAll()
         {
