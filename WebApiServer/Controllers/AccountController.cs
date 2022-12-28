@@ -16,21 +16,20 @@ using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol;
 using ValueObjects;
 using WebAPI.Server.Services;
-
+//
 namespace WebAPI.Server.Controllers
 {
     [Route("[controller]")]
     [ApiController]
     public class AccountController :Controller
     {
-        private HttpContext context => HttpContext;
         private IUserService userService;
         private readonly ILogger<AccountController> logger;
         
         public AccountController(ILogger<AccountController> logger)
         {
             this.logger = logger;
-            userService = new UserServiceDatabase();
+            userService = new UserService();
         }
 
         [AllowAnonymous]
@@ -38,27 +37,28 @@ namespace WebAPI.Server.Controllers
         public ActionResult<LoginResponse> Login2([FromQuery] LoginRequest request)
         {
             var user = userService.GetByLogin(request.Login);
-            if (user is null || user.Password != request.Password)
+            if (user is null || user.Password != "")
             {
                 logger.LogWarning(MyLogEvents.GetItemNotFound, $" {request.Login} isn't exist");
                 return BadRequest(user);
-                    
             }
             logger.LogInformation(MyLogEvents.GetItem, $"Login {request.Login} ");
             return Ok(new LoginResponse()
-            {
-                Id = Convert.ToInt32(user.Id),
-                Cookie = SetCookie(user).ToString(),
-                Login = user.Login,
-                Name = user.Name
-            });
+             {
+                 Id = Convert.ToInt32(user.Id),
+                 Cookie = SetCookie(user).ToJson(),
+                 Login = user.Login,
+                 Surname = user.Surname,
+                 Role = (int)user.Role,
+                 Name = user.Name
+             });
         }
         
         [HttpGet("/logout")]
         public ActionResult<UserServer> Logout()
         {
             logger.LogInformation(MyLogEvents.DeleteItem, $"Logout");
-            context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Ok();
         }
 
@@ -86,7 +86,7 @@ namespace WebAPI.Server.Controllers
             };
             // создаем объект ClaimsIdentity
             var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-            context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
             return claims;
         }
     }

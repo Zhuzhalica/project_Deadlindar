@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using ValueObjects;
+using WebAPI.Server;
 
-namespace WebAPI.Server.Services
+namespace Deadlindar.Repositories
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         List<UserServer> GetAll();
         UserServer? GetById(int id);
