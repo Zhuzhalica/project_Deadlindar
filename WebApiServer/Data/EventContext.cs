@@ -15,7 +15,7 @@ namespace WebAPI.Server.Data
         public EventContext (DbContextOptions<EventContext> options)
             : base(options)
         {
-            //Database.EnsureDeleted();
+            Database.EnsureDeleted();
             Database.EnsureCreated(); //Расскоментировать если нужна новая чистая бд
         }
 

@@ -15,16 +15,6 @@ namespace WebAPI.Server
         [Required]
         public string Password { get; set; }
         [Required]
-        public int Role { get; set; } 
-
-        //
-        // public RegisterRequest(string name, string surname, string login, string password, int role)
-        // {
-        //     this.Name = name;
-        //     this.Surname = surname;
-        //     this.Login = login;
-        //     this.Password = password;
-        //     this.Role =  role;
-        // }
+        public int Role { get; set; }
     }
 }

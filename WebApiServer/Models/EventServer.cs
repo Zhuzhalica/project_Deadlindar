@@ -13,11 +13,5 @@ namespace Deadlindar.Models
         [Key]
         public string Login { get; set; }
         public Event Event { get; set; }
-
-        // public EventServer(string login, Event Event)
-        // {
-        //     this.Login = login;
-        //     this.Event = Event;
-        // }
     }
 }

@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using ValueObjects;
+using WebAPI.Server;
 
-namespace WebAPI.Server.Services
+namespace Deadlindar.Repositories
 {
-    public class UserServiceWithList: IUserService
+    public class UserRepositoryList: IUserRepository
     {
         private static List<UserServer> Users { get; }
         private static int nextId = 7;
 
-        static UserServiceWithList()
+        static UserRepositoryList()
         {
             var u = new UserServer(20, "Vadim", "Bykov", "Zhuzha");
             // var d = new Day(DateTime.Today);
@@ -44,7 +45,7 @@ namespace WebAPI.Server.Services
             return user;
         }
         
-        public bool Update(int id, UserServer userServer)
+        public bool Update(UserServer userServer)
         {
             var index = Users.FindIndex(p => p.Id == userServer.Id);
             if(index == -1)
@@ -52,15 +53,6 @@ namespace WebAPI.Server.Services
             
             Users[index] = userServer;
             return true;
-        }
-        
-        public UserServer Register(RegisterRequest model)
-        {
-            if (Users.Any(u => u.Login == model.Login))
-                throw new ArgumentException($"Login {model.Login} is taken");
-            var user = new UserServer(nextId++, model.Name, model.Surname, model.Login, model.Password);
-            Users.Add(user);
-            return user;
         }
 
         public  bool IsLoginExist(string login)

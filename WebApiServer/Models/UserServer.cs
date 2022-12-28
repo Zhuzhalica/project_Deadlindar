@@ -27,13 +27,13 @@ namespace ValueObjects
         public string Surname { get; set; }
         public string Login { get; set; }
         [JsonIgnore]
-        //public HashSet<Day> DaysWithEvents { get; set; }
         public Role Role { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
 
         public UserStatus Status { get; set; }
 
+        public UserServer(){}
         public UserServer(int id, string name, string surname, string login)
         {
             this.Id = id;
@@ -52,7 +52,6 @@ namespace ValueObjects
             this.Login = login;
             this.Status = UserStatus.Approved;
             this.Role = Role.Member;
-            //DaysWithEvents = new HashSet<Day>();
             this.Password = password;
         }
         public UserServer(int id, string name, string surname, string login, string password, int role)
@@ -63,7 +62,6 @@ namespace ValueObjects
             this.Login = login;
             this.Status = UserStatus.Approved;
             this.Role = (Role) role;
-            //DaysWithEvents = new HashSet<Day>();
             this.Password = password;
         }
     }

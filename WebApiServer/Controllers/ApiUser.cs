@@ -25,7 +25,7 @@ namespace WebAPI.Server.Controllers
         {
             this.logger = logger;
             this.logger.LogInformation("User logger called");
-            _userService = new UserServiceDatabase();
+            _userService = new UserService();
         }
 
         //[AllowAnonymous]
@@ -65,9 +65,9 @@ namespace WebAPI.Server.Controllers
         
         
         [HttpPut("{id}")]
-        public ActionResult<UserServer> Update(int id, UserServer userServer)
+        public ActionResult<UserServer> Update([FromQuery] UserServer userServer)
         {
-            var result = _userService.Update(id, userServer);
+            var result = _userService.Update(userServer);
             if (!result)
             {
                 logger.LogWarning(MyLogEvents.UpdateItemNotFound, $"Not  update");
