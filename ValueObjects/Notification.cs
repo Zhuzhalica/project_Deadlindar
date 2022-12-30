@@ -14,6 +14,11 @@
             Type = type;
             Group = _group;
         }
+        public Notification(string text, NotificationType type)
+        {
+            Text = text;
+            Type = type;
+        }
 
         public Notification()
         {

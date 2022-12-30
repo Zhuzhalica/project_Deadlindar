@@ -7,12 +7,16 @@
         mc:Ignorable="d"
         Title="Dedlandar" Height="450" Width="800">
     <Grid>
-        <Label Content="Введите имя: " HorizontalAlignment="Center" Margin="300,90,300,300" />
-        <TextBox x:Name="name" HorizontalAlignment="Center" Height="24" Width="150" Margin="300,110,300,270"/>
-        <Label Content="Введите фамилию: " HorizontalAlignment="Center" Margin="300,150,300,240" />
-        <TextBox x:Name="surname" HorizontalAlignment="Center" Height="24" Width="150" Margin="300,180,300,230"/>
-        <TextBox x:Name="login" HorizontalAlignment="Center" Height="24" Width="150" Margin="300,220,300,270"/>
-        <TextBox x:Name="password" HorizontalAlignment="Center" Height="24" Width="150" Margin="300,260,300,200"/>
-        <Button x:Name="regin" Click="Registration_Click" Content="Регистрация" HorizontalAlignment="Center" Margin="300,300,300,92" />
+        <StackPanel>
+        <Label Content="Введите имя: " HorizontalAlignment="Center" Margin="5,5,5,5" />
+        <TextBox x:Name="name" HorizontalAlignment="Center" Height="24" Width="150" Margin="5,5,5,5"/>
+        <Label Content="Введите фамилию: " HorizontalAlignment="Center" Margin="5,5,5,5" />
+        <TextBox x:Name="surname" HorizontalAlignment="Center" Height="24" Width="150" Margin="5,5,5,5"/>
+        <Label Content="Введите логин: " HorizontalAlignment="Center" Margin="5,5,5,5" />
+        <TextBox x:Name="login" HorizontalAlignment="Center" Height="24" Width="150" Margin="5,5,5,5"/>
+        <Label Content="Введите пароль: " HorizontalAlignment="Center" Margin="5,5,5,5" />
+        <TextBox x:Name="password" HorizontalAlignment="Center" Height="24" Width="150" Margin="5,5,5,5"/>
+        <Button x:Name="regin" Click="Registration_Click" Content="Регистрация" HorizontalAlignment="Center" Margin="5,5,5,5" />
+        </StackPanel>
     </Grid>
 </Window>

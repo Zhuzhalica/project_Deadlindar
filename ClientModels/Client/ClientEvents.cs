@@ -32,29 +32,35 @@ namespace ClientModels
 
         public List<Event>? TryGet(User user, string uri)
         {
-            var content = Requests.Get(user, uri);
-            List<Event>? events = null;
-            if (content.Result.IsSuccessStatusCode)
+            try
             {
-                events = ResponseInEvent(content.Result);
-                if (_Events.Count != 0)
+                var content = Requests.Get(user, uri);
+                List<Event>? events = null;
+                if (content.Result.IsSuccessStatusCode)
                 {
-                    foreach (var _event in _Events)
+                    events = ResponseInEvent(content.Result);
+                    if (_Events.Count != 0)
                     {
-                        if (!events.Contains(_event))
+                        foreach (var _event in _Events)
                         {
-                            TryAdd(user.Login, _event, uri);
-                            events.Add(_event);
+                            if (!events.Contains(_event))
+                            {
+                                TryAdd(user.Login, _event, uri);
+                                events.Add(_event);
+                            }
                         }
                     }
-                    
-                }
 
-                _Events.Clear();
-                _Events.AddRange(events);
-                return events;
+                    _Events.Clear();
+                    _Events.AddRange(events);
+                    return events;
+                }
+                else
+                {
+                    return null;
+                }
             }
-            else
+            catch (AggregateException e)
             {
                 return null;
             }
@@ -67,21 +73,35 @@ namespace ClientModels
 
         public bool TryAdd(string login, Event _event, string uri)
         {
-            var response = Requests.Add(login, _event, uri);
-            _Events.Add(_event);
-            return response.Result.IsSuccessStatusCode;
+            try
+            {
+                var response = Requests.Add(login, _event, uri);
+                _Events.Add(_event);
+                return response.Result.IsSuccessStatusCode;
+            }
+            catch (AggregateException e)
+            {
+                return false;
+            }
         }
 
         public bool TryDelete(string login, Event _event, string uri)
         {
-            var response = Requests.Delete(login, _event, uri);
-            if (_Events.Contains(_event))
+            try
             {
-                var index = _Events.IndexOf(_event);
-                _Events[index].IsDeleted = true;
-            }
+                var response = Requests.Delete(login, _event, uri);
+                if (_Events.Contains(_event))
+                {
+                    var index = _Events.IndexOf(_event);
+                    _Events[index].IsDeleted = true;
+                }
 
-            return response.Result.IsSuccessStatusCode;
+                return response.Result.IsSuccessStatusCode;
+            }
+            catch (AggregateException e)
+            {
+                return false;
+            }
         }
 
         public void Dispose(User user, string uri)

@@ -21,7 +21,7 @@ namespace WebAPI.Server.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source=C:\Users\German\ProjectD\WebApiServer\AppData\Events.db;");
+            optionsBuilder.UseSqlite(@"C:\Users\portu\Desktop\pDeadlindar\WebApiServer\AppData\Db\Events.db;");
         }
         public DbSet<EventServer> Events { get; set; } = null!;
 

@@ -2,7 +2,7 @@
 
 namespace WpfLibrary
 {
-    public interface INotification
+    public interface INotificationDraw
     {
         void ShowNotification(Notification notification);
     }

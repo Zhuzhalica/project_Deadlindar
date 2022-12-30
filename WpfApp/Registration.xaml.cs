@@ -1,5 +1,8 @@
 ﻿using System.Windows;
 using ClientModels;
+using Ninject;
+using ValueObjects;
+using WpfLibrary;
 
 namespace WpfApp
 {
@@ -15,16 +18,24 @@ namespace WpfApp
             var login = this.login.Text;
             var password = this.password.Text;
             var u = new User(login, password);
-            var user = App.Handler.ClientUser.TryGet(u, App.Handler.URI);
+            var loginExist = App.Handler.ClientUser.CheckLoginExist(u, App.Handler.URI);
             
-            if (user is null)
+            if (!loginExist)
             {
-                user = new User(name.Text, surname.Text, login, password);
-                // TODO
+                var user = new User(name.Text, surname.Text, login, password);
+                var success = App.Handler.ClientUser.TryAdd(user.Login, user, App.Handler.URI);
+                if (!success)
+                    App.container.Get<INotificationDraw>().ShowNotification(new Notification("Что-то пошло не так. Попробуйте позже снова", NotificationType.Error));
+                else
+                {
+                    var log = new Login();
+                    log.Show();
+                    Close();
+                }
             }
             else
             {
-                // TODO
+                App.container.Get<INotificationDraw>().ShowNotification(new Notification("Пользователь с таким логином уже существует", NotificationType.Error));
             }
         }
     }

@@ -7,6 +7,11 @@ namespace Deadlindar.Repositories.Json
 {
     public class NotificationRepositoryJson: INotificationRepository, IJsonRepository<Notification>
     {
+        public NotificationRepositoryJson(IJsonRepository<Notification> repository)
+        {
+            
+        }
+
         public IEnumerable<Notification> GetByLogin(string login)
         {
             return OpenFile(login);

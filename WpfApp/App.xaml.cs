@@ -3,6 +3,8 @@ using System.Windows;
 using ClientModels;
 using Ninject;
 using ValueObjects;
+using WpfLibrary;
+using WpfLibrary.Xaml;
 
 namespace WpfApp
 {
@@ -26,6 +28,7 @@ namespace WpfApp
             container.Bind<IRequests<Event>>().To<EventRequests>().InSingletonScope();
             container.Bind<IRequests<Notification>>().To<NotificationRequests>().InSingletonScope();
             container.Bind<IRequests<User>>().To<UserRequests>().InSingletonScope();
+            container.Bind<IUserRequest>().To<UserRequests>().InSingletonScope();
 
             container.Bind<IClientSaver>().To<JsonSaver>().InSingletonScope();
             
@@ -34,6 +37,7 @@ namespace WpfApp
             container.Bind<ClientUser>().To<ClientUser>().InSingletonScope();
 
             container.Bind<IHandler>().To<UserDataHandler>().InSingletonScope();
+            container.Bind<INotificationDraw>().To<NotificationDrawWpf>().InSingletonScope();
 
             return container;
         }

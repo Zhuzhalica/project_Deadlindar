@@ -8,14 +8,9 @@ using NotificationType = ValueObjects.NotificationType;
 
 namespace WpfLibrary.Xaml
 {
-    public partial class NotificationWpf : Window, INotification
+    public class NotificationDrawWpf : INotificationDraw
     {
         private NotificationManager NotificationManager = new NotificationManager();
-        
-        public NotificationWpf()
-        {
-            InitializeComponent();
-        }
 
         public void ShowNotification(Notification notification)
         {

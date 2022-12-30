@@ -1,5 +1,9 @@
 ﻿using System.Windows;
 using ClientModels;
+using Ninject;
+using ValueObjects;
+using WpfLibrary;
+using WpfLibrary.Xaml;
 
 namespace WpfApp
 {
@@ -19,7 +23,7 @@ namespace WpfApp
 
             if (user is null)
             {
-                Close();
+                App.container.Get<INotificationDraw>().ShowNotification(new Notification("Неверный логин или пороль", NotificationType.Error));
             }
             else
             {

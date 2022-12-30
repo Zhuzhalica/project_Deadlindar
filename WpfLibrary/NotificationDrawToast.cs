@@ -8,13 +8,8 @@ using ValueObjects;
 
 namespace WpfLibrary.Xaml
 {
-    public partial class NotificationToast : Window, INotification
+    public class NotificationDrawToast : INotificationDraw
     {
-        public NotificationToast()
-        {
-            InitializeComponent();
-        }
-
         private readonly Notifier notifier = new Notifier(cfg =>
         {
             cfg.PositionProvider = new WindowPositionProvider(

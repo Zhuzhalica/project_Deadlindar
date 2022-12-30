@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol;
+using NUnit.Framework;
 using ValueObjects;
 using WebAPI.Server.Services;
 //
@@ -37,10 +38,15 @@ namespace WebAPI.Server.Controllers
         public ActionResult<LoginResponse> Login([FromQuery] LoginRequest request)
         {
             var user = userService.GetByLogin(request.Login);
-            if (user is null || user.Password != request.Password)
+            if (user is null)
             {
                 logger.LogWarning(MyLogEvents.GetItemNotFound, $" {request.Login} isn't exist");
                 return BadRequest(user);
+            }
+            if (request.Password!=user.Password)
+            {
+                logger.LogWarning(MyLogEvents.GetItemNotFound, $" {request.Login}:{request.Password} wrong password");
+                return Problem();
             }
             logger.LogInformation(MyLogEvents.GetItem, $"Login {request.Login} ");
             return Ok(new LoginResponse()
@@ -59,6 +65,19 @@ namespace WebAPI.Server.Controllers
         {
             logger.LogInformation(MyLogEvents.DeleteItem, $"Logout");
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Ok();
+        }
+        
+        [HttpGet("/loginExist")]
+        public ActionResult<UserServer> CheckLoginExist([FromQuery] LoginRequest request)
+        {
+            var user = userService.GetByLogin(request.Login);
+            if (user is null)
+            {
+                logger.LogWarning(MyLogEvents.GetItemNotFound, $"{request.Login} isn't exist");
+                return BadRequest();
+            }
+
             return Ok();
         }
 
