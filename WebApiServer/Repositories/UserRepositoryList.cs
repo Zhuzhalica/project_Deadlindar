@@ -10,36 +10,36 @@ namespace Deadlindar.Repositories
 {
     public class UserRepositoryList : IUserRepository
     {
-        private static List<UserServer> Users { get; }
+        private static List<User> Users { get; }
         private static int nextId = 7;
 
         static UserRepositoryList()
         {
 
             
-            var u = new UserServer(20, "Vadim", "Bykov", "Zhuzha");
+            var u = new User(20, "Vadim", "Bykov", "Zhuzha");
             // var d = new Day(DateTime.Today);
             // var t = new TimeInterval(DateTime.Today.AddDays(1), DateTime.Today.AddDays(1).AddHours(1));
             // //d.Events.Add(new Event("OOP", timeInterval:t));
-            Users = new List<UserServer>()
+            Users = new List<User>()
             {
-                new UserServer(10, "German", "Markov", "Nobody"),
-                new UserServer(23, "Alina", "Valitova", "kissliinka"),
+                new User(10, "German", "Markov", "Nobody"),
+                new User(23, "Alina", "Valitova", "kissliinka"),
                 u
             };
         }
 
-        public List<UserServer> GetAll() => Users;
-        public UserServer? GetById(int id) => Users.FirstOrDefault(u => u.Id == id);
-        public UserServer? GetByLogin(string login) => Users.FirstOrDefault(u => u.Login == login);
+        public List<User> GetAll() => Users;
+        public User? GetById(int id) => Users.FirstOrDefault(u => u.Id == id);
+        public User? GetByLogin(string login) => Users.FirstOrDefault(u => u.Login == login);
 
-        public void Add(UserServer userServer)
+        public void Add(User user)
         {
-            userServer.Id = nextId++;
-            Users.Add(userServer);
+            user.Id = nextId++;
+            Users.Add(user);
         }
 
-        public UserServer? Delete(int id)
+        public User? Delete(int id)
         {
             var user = GetById(id);
             if (user is null)
@@ -49,13 +49,13 @@ namespace Deadlindar.Repositories
             return user;
         }
 
-        public bool Update(UserServer userServer)
+        public bool Update(User user)
         {
-            var index = Users.FindIndex(p => p.Id == userServer.Id);
+            var index = Users.FindIndex(p => p.Id == user.Id);
             if (index == -1)
                 return false;
 
-            Users[index] = userServer;
+            Users[index] = user;
             return true;
         }
 

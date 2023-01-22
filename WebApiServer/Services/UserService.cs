@@ -17,34 +17,34 @@ namespace WebAPI.Server.Services
         {
             _userRepository = repository;
         }
-        public List<UserServer> GetAll()
+        public List<User> GetAll()
         {
             return _userRepository.GetAll();
         }
 
-        public UserServer? GetById(int id)
+        public User? GetById(int id)
         {
             return _userRepository.GetById(id);
         }
 
-        public UserServer? GetByLogin(string login)
+        public User? GetByLogin(string login)
         {
             return _userRepository.GetByLogin(login);
         }
 
-        public void Add(UserServer userServer)
+        public void Add(User user)
         {
-            _userRepository.Add(userServer);
+            _userRepository.Add(user);
         }
 
-        public UserServer? Delete(int id)
+        public User? Delete(int id)
         {
             return _userRepository.Delete(id);
         }
 
-        public bool Update(UserServer userServer)
+        public bool Update(User user)
         {
-            return _userRepository.Update(userServer);
+            return _userRepository.Update(user);
         }
 
         public bool IsLoginExist(string login)

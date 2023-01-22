@@ -2,49 +2,35 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using ValueObjects;
 
 namespace Deadlindar.Repositories.Json
 {
-    public class EventRepositoryJson: IEventRepository, IJsonRepository<Event>
+    public class EventRepositoryJson: IEventRepository
     {
-        private List<Event> OpenFile(string login)
+        private readonly IJsonRepository repository;
+        public EventRepositoryJson(IJsonRepository repository)
         {
-            var events = new List<Event>();
-            if (File.Exists($"C:\\Users\\portu\\Desktop\\pDeadlindar\\WebApiServer\\AppData\\Json\\Events{login}.json"))
-            {
-                using FileStream stream =
-                    File.OpenRead($"C:\\Users\\portu\\Desktop\\pDeadlindar\\WebApiServer\\AppData\\Json\\Events{login}.json");
-                events = JsonSerializer.DeserializeAsync<List<Event>>(stream).Result;
-            }
-
-            events ??= new List<Event>();
-            return events;
-        }
-
-        private void SaveFile(string login, List<Event> events)
-        {
-            using FileStream createStream = File.Create($"C:\\Users\\portu\\Desktop\\pDeadlindar\\WebApiServer\\AppData\\Json\\Events{login}.json");
-            JsonSerializer.SerializeAsync(createStream, events);
+            this.repository = repository;
         }
 
         public IEnumerable<Event> GetByLogin(string login)
         {
-            return OpenFile(login);
+            return repository.OpenFile<List<Event>>(login);
         }
 
         public void Add(string login, Event deadline)
         {
-            var events = OpenFile(login);
+            var events = repository.OpenFile<List<Event>>(login);
             events.Add(deadline);
-            SaveFile(login, events);
+            repository.SaveFile(login, events);
         }
 
         public bool Delete(string login, Event deadline)
         {
-            var events = OpenFile(login);
+            var events = repository.OpenFile<List<Event>>(login);
             var answer = false;
-            var t = Equals(events[0], deadline);
             if (events.Contains(deadline))
             {
                 var ind = events.IndexOf(deadline);
@@ -52,7 +38,7 @@ namespace Deadlindar.Repositories.Json
                 answer = true;
             }
             
-            SaveFile(login, events);
+            repository.SaveFile(login, events);
             return answer;
         }
     }

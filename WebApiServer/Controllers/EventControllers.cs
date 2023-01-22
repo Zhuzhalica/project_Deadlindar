@@ -22,14 +22,14 @@ namespace WebAPI.Server.Controllers
         }
         
         [HttpGet(Name="GetEvents{login}")]
-        public IEnumerable<Event> GetEvents(string login)
+        public IEnumerable<Event> GetByLogin(string login)
         {
             logger.LogInformation(MyLogEvents.GetItem, "Get events");
             return _eventService.GetByLogin(login);
         }
         
         [HttpPost("Add")]
-        public ActionResult<Event> AddEvent(string login, Event deadline)
+        public ActionResult<Event> Add(string login, Event deadline)
         {
             
             _eventService.Add(login, deadline);

@@ -19,6 +19,7 @@ namespace ClientModels
                 RequestUri = new Uri($"{uri}/login?Login={user.Login}&Password={user.Password}"),
                 Method = HttpMethod.Get,
             };
+
             return new Client().SendAsync(request);
         }
 

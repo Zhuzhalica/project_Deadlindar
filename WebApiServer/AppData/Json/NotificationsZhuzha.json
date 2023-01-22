@@ -1,1 +1,9 @@
-[{"Title":"string","Text":"string","Type":0,"Group":"string","IsDeleted":true}]
+[
+  {
+    "Title": "string",
+    "Text": "string",
+    "Type": 0,
+    "Group": "string",
+    "IsDeleted": true
+  }
+]

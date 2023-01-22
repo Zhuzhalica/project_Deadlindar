@@ -12,7 +12,7 @@ namespace Deadlindar.Repositories
     {
         public UserRepositoryDatabase()
         { }
-        public List<UserServer> GetAll()
+        public List<User> GetAll()
         {
             using (UserContext db = new())
             {
@@ -20,7 +20,7 @@ namespace Deadlindar.Repositories
             }
         }
 
-        public UserServer? GetById(int id)
+        public User? GetById(int id)
         {
             using (UserContext db = new())
             {
@@ -28,7 +28,7 @@ namespace Deadlindar.Repositories
             }
         }
 
-        public UserServer? GetByLogin(string login)
+        public User? GetByLogin(string login)
         {
             using (UserContext db = new())
             {
@@ -36,16 +36,16 @@ namespace Deadlindar.Repositories
             }
         }
 
-        public void Add(UserServer userServer)
+        public void Add(User user)
         {
             using (UserContext db = new())
             {
-                db.Users.Add(userServer);
+                db.Users.Add(user);
                 db.SaveChanges();
             }
         }
 
-        public UserServer? Delete(int id)
+        public User? Delete(int id)
         {
             using (UserContext db = new())
             {
@@ -58,12 +58,12 @@ namespace Deadlindar.Repositories
             }
         }
 
-        public bool Update(UserServer userServer)
+        public bool Update(User user)
         {
-             var u = Delete(userServer.Id);
+             var u = Delete(user.Id);
              if (u is null)
                  return false;  
-             Add(userServer);
+             Add(user);
              return true;
         }
 

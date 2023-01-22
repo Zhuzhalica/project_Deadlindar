@@ -5,12 +5,12 @@ namespace WebAPI.Server.Services
 {
     public interface IUserService
     {
-        List<UserServer> GetAll();
-        UserServer? GetById(int id);
-        UserServer? GetByLogin(string login);
-        void Add(UserServer userServer);
-        UserServer? Delete(int id);
-        bool Update(UserServer userServer);
+        List<User> GetAll();
+        User? GetById(int id);
+        User? GetByLogin(string login);
+        void Add(User user);
+        User? Delete(int id);
+        bool Update(User user);
         bool IsLoginExist(string login);
     }
 }

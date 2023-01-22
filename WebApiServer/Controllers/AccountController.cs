@@ -55,13 +55,12 @@ namespace WebAPI.Server.Controllers
                  Cookie = SetCookie(user).ToJson(),
                  Login = user.Login,
                  Surname = user.Surname,
-                 Role = (int)user.Role,
                  Name = user.Name
              });
         }
         
         [HttpGet("/logout")]
-        public ActionResult<UserServer> Logout()
+        public ActionResult<User> Logout()
         {
             logger.LogInformation(MyLogEvents.DeleteItem, $"Logout");
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -69,7 +68,7 @@ namespace WebAPI.Server.Controllers
         }
         
         [HttpGet("/loginExist")]
-        public ActionResult<UserServer> CheckLoginExist([FromQuery] LoginRequest request)
+        public ActionResult<User> CheckLoginExist([FromQuery] LoginRequest request)
         {
             var user = userService.GetByLogin(request.Login);
             if (user is null)
@@ -91,17 +90,16 @@ namespace WebAPI.Server.Controllers
                 return BadRequest();
             }
             logger.LogInformation(MyLogEvents.GenerateItems, $"Register new user");
-            var user = new UserServer(0, model.Name, model.Surname, model.Login);
+            var user = new User(0, model.Name, model.Surname, model.Login);
             userService.Add(user);
             return Ok(new RegistrationResponse(){UserId = user.Id, Cookies = SetCookie(user).ToString()});
         } 
         
-        private List<Claim> SetCookie(UserServer userServer)
+        private List<Claim> SetCookie(User user)
         {
             var claims = new List<Claim>
             {
-                new (ClaimTypes.Name, userServer.Login), new (ClaimTypes.UserData, userServer.Password)
-                , new(ClaimsIdentity.DefaultRoleClaimType, userServer.Role.ToString())
+                new (ClaimTypes.Name, user.Login), new (ClaimTypes.UserData, user.Password)
             };
             // создаем объект ClaimsIdentity
             var claimsIdentity = new ClaimsIdentity(claims, "Cookies");

@@ -24,13 +24,19 @@ builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(conne
 builder.Services.AddDbContext<EventContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddSingleton<IJsonRepository, JsonRepositoryIndividual>();
+
 builder.Services.AddSingleton<INotificationRepository, NotificationRepositoryJson>();
 builder.Services.AddSingleton<IEventRepository, EventRepositoryJson>();
 builder.Services.AddSingleton<IUserRepository, UserRepositoryDatabase>();
+builder.Services.AddSingleton<ILoginGroupsRepository, LoginGroupsRepositoryJson>();
+// builder.Services.AddSingleton<IJsonRepository<JsonRepositoryCommon>, GroupRepositoryJson>();
+builder.Services.AddSingleton<IGroupRepository, GroupRepositoryJson>();
 
 builder.Services.AddSingleton<INotificationService, NotificationService>();
 builder.Services.AddSingleton<IEventService, EventService>();
 builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IGroupService, GroupService>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

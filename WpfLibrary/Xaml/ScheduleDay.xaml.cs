@@ -211,7 +211,7 @@ namespace WpfLibrary
                 if (i == 0 || i % timeDisplayInterval == 0)
                 {
                     Label label = new Label();
-                    label.Content = string.Format("{0:00}:{1:00}", time.Hours, time.Minutes);
+                    label.Content = $"{time.Hours:00}:{time.Minutes:00}";
                     label.SetValue(Grid.ColumnProperty, 0);
                     label.SetValue(Grid.RowProperty, i);
                     label.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Left);

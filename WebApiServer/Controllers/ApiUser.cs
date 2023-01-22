@@ -30,14 +30,14 @@ namespace WebAPI.Server.Controllers
 
         //[AllowAnonymous]
         [HttpGet(Name = "GetUsers")]
-        public IEnumerable<UserServer> GetUsers()
+        public IEnumerable<User> GetUsers()
         {
             logger.LogInformation(MyLogEvents.GetItem, "Get users");
             return _userService.GetAll();
         }
         
         [HttpGet("{login}")]
-        public ActionResult<UserServer> GetByLogin(string login)
+        public ActionResult<User> GetByLogin(string login)
         {
             logger.LogInformation(MyLogEvents.GetItem, $"Get item {login}");
             var user = _userService.GetByLogin(login);
@@ -50,14 +50,14 @@ namespace WebAPI.Server.Controllers
         }
 
         [HttpPost("CreateUser")]
-        public ActionResult<UserServer> Create(string name, string surname, string login)
+        public ActionResult<User> Create(string name, string surname, string login)
         {
             if (!_userService.IsLoginExist(login))
             {
                 logger.LogWarning(MyLogEvents.GenerateItems, $"Login {login} is exist");
                 return BadRequest();
             }
-            var user = new UserServer(0, name, surname, login);
+            var user = new User(0, name, surname, login);
             _userService.Add(user);
             logger.LogInformation(MyLogEvents.InsertItem, $"Create new user");
             return user;
@@ -65,9 +65,9 @@ namespace WebAPI.Server.Controllers
         
         
         [HttpPut("{id}")]
-        public ActionResult<UserServer> Update([FromQuery] UserServer userServer)
+        public ActionResult<User> Update([FromQuery] User user)
         {
-            var result = _userService.Update(userServer);
+            var result = _userService.Update(user);
             if (!result)
             {
                 logger.LogWarning(MyLogEvents.UpdateItemNotFound, $"Not  update");
@@ -78,7 +78,7 @@ namespace WebAPI.Server.Controllers
         }
         
         [HttpDelete("{id}")]
-        public ActionResult<UserServer> Delete(int id)
+        public ActionResult<User> Delete(int id)
         {
             var user = _userService.Delete(id);
             if (user is null)

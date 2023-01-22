@@ -27,7 +27,7 @@ namespace WebAPI.Server.Controllers
         }
         
         [HttpPost("Add")]
-        public ActionResult<Event> AddNotification(string login, Notification notification)
+        public ActionResult<Notification> AddNotification(string login, Notification notification)
         {
             _eventService.Add(login, notification);
             logger.LogInformation(MyLogEvents.InsertItem, $"Add new event");
@@ -35,7 +35,7 @@ namespace WebAPI.Server.Controllers
         }
 
         [HttpDelete("Delete")]
-        public ActionResult<Event> Delete(string login, Notification notification)
+        public ActionResult<Notification> Delete(string login, Notification notification)
         {
             if (_eventService.Delete(login, notification))
             {

@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Globalization;
-using System.Linq;
-using System.Text.Json.Serialization;
-using ValueObjects;
+﻿using System.Text.Json.Serialization;
 
-namespace WebAPI.Server
+namespace ValueObjects
 {
-    public enum Role
-    {
-        Anonym,
-        Member,
-        Admin
-    }
 
     public enum UserStatus
     {
@@ -22,21 +10,35 @@ namespace WebAPI.Server
         Rejected
     }
 
-    public class UserServer : IUser
+    public class User
     {
-        public int Id { get; set; }
+        [JsonIgnore] public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Login { get; set; }
-        [JsonIgnore] public Role Role { get; set; }
         [JsonIgnore] public string Password { get; set; }
         [JsonIgnore] public UserStatus Status { get; set; }
 
-        public UserServer()
+        public User()
         {
         }
 
-        public UserServer(int id, string name, string surname, string login)
+        public User(string name, string surname, string login, string password)
+        {
+            this.Name = name;
+            this.Surname = surname;
+            this.Login = login;
+            Password = password;
+        }
+
+        public User(string login, string password)
+        {
+            Login = login;
+            Password = password;
+        }
+
+
+        public User(int id, string name, string surname, string login)
         {
             this.Id = id;
             this.Name = name;
@@ -44,28 +46,25 @@ namespace WebAPI.Server
             this.Login = login;
             this.Status = UserStatus.Approved;
             this.Password = "";
-            this.Role = Role.Anonym;
         }
 
-        public UserServer(int id, string name, string surname, string login, string password)
+        public User(int id, string name, string surname, string login, string password)
         {
             this.Id = id;
             this.Name = name;
             this.Surname = surname;
             this.Login = login;
             this.Status = UserStatus.Approved;
-            this.Role = Role.Member;
             this.Password = password;
         }
 
-        public UserServer(int id, string name, string surname, string login, string password, int role)
+        public User(int id, string name, string surname, string login, string password, int role)
         {
             this.Id = id;
             this.Name = name;
             this.Surname = surname;
             this.Login = login;
             this.Status = UserStatus.Approved;
-            this.Role = (Role) role;
             this.Password = password;
         }
     }

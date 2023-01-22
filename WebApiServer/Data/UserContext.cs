@@ -22,14 +22,14 @@ namespace WebAPI.Server.Data
             var dataSource = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "user.db");
             optionsBuilder.UseSqlite(@"Data Source=C:\Users\portu\Desktop\pDeadlindar\WebApiServer\AppData\Db\users.db;");
         }
-        public DbSet<UserServer> Users { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var u = new UserServer(20, "Vadim", "Bykov", "Zhuzha", "12345678",1);
-            modelBuilder.Entity<UserServer>().HasData(
-                 new UserServer(10, "German", "Markov", "Nobody", "asfaf", 2),
-                 new UserServer(23, "Alina", "Valitova", "kissliinka", "afs",1),
+            var u = new User(20, "Vadim", "Bykov", "Zhuzha", "12345678",1);
+            modelBuilder.Entity<User>().HasData(
+                 new User(10, "German", "Markov", "Nobody", "asfaf", 2),
+                 new User(23, "Alina", "Valitova", "kissliinka", "afs",1),
                  u);
         }
     }

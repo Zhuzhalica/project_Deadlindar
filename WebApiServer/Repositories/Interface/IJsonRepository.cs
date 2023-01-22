@@ -3,16 +3,10 @@ using ValueObjects;
 
 namespace Deadlindar.Repositories
 {
-    public interface IJsonRepository<T>
+    public interface IJsonRepository
     {
-        private List<T> OpenFile(string login)
-        {
-            throw new System.NotImplementedException();
-        }
+        T OpenFile<T>(string login) where T : new();
 
-        private void SaveFile(string login, List<T> events)
-        {
-            throw new System.NotImplementedException();
-        }
+       void SaveFile<T>(string login, T obj);
     }
 }
