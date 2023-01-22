@@ -13,6 +13,8 @@ namespace ValueObjects
         public GoalType GoalType { get; set; }
         public bool IsDeleted { get; set; }
 
+        public string Group = "Личные";
+
         public Event(string title, GoalType goalType, TimeInterval timeInterval, string description)
         {
             this.Title = title;
@@ -62,7 +64,14 @@ namespace ValueObjects
 
         public static bool operator ==(Event r1, Event r2)
         {
-            return r1.Equals(r2);
+            try
+            {
+                return r1.Equals(r2);
+            }
+            catch (NullReferenceException)
+            {
+                return false;
+            }
         }
 
         public static bool operator !=(Event r1, Event r2)

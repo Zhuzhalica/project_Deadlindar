@@ -19,7 +19,7 @@ namespace WpfLibrary
     /// <summary>
     /// Логика взаимодействия для CalendarEventView.xaml
     /// </summary>
-    public partial class CalendarEventView : Page
+    public partial class CalendarEventView : Grid
     {
         private ScheduleMonth _calendar;
 
@@ -30,7 +30,8 @@ namespace WpfLibrary
         }
 
         public static readonly DependencyProperty BackgroundColorProperty =
-            DependencyProperty.Register("BackgroundColor", typeof(SolidColorBrush), typeof(CalendarEventView));
+            DependencyProperty.Register("BackgroundColor", typeof(SolidColorBrush), typeof(CalendarEventView), new PropertyMetadata(Brushes.Red));
+        
 
         public SolidColorBrush DefaultBackfoundColor;
 

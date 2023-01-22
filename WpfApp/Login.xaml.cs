@@ -19,7 +19,7 @@ namespace WpfApp
             var login = this.login.Text;
             var password = this.password.Password;
             var u = new User(login, password);
-            var user = App.Handler.ClientUser.TryGet(u, App.Handler.URI);
+            var user = App.UserHandler.ClientUser.TryGet(u, App.UserHandler.URI);
 
             if (user is null)
             {
@@ -27,11 +27,20 @@ namespace WpfApp
             }
             else
             {
-                App.Handler.Setup(user.Login);
+                Setup(user.Login);
                 var mainWindow = new MainWindow();
                 mainWindow.ShowWindow();
                 Close();
             }
+        }
+
+        private void Setup(string login)
+        {
+            var uri = App.UserHandler.URI;
+            App.UserHandler.Setup(login);
+            App.EventHandler.Setup(login, uri);
+            App.NotificationHandler.Setup(login, uri);
+            App.GroupHandler.Setup(login, uri);
         }
 
         private void Registration_Click(object sender, RoutedEventArgs e)

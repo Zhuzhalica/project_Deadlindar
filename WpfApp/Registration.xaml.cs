@@ -18,12 +18,12 @@ namespace WpfApp
             var login = this.login.Text;
             var password = this.password.Text;
             var u = new User(login, password);
-            var loginExist = App.Handler.ClientUser.CheckLoginExist(u, App.Handler.URI);
+            var loginExist = App.UserHandler.ClientUser.CheckLoginExist(u, App.UserHandler.URI);
             
             if (!loginExist)
             {
                 var user = new User(name.Text, surname.Text, login, password);
-                var success = App.Handler.ClientUser.TryAdd(user.Login, user, App.Handler.URI);
+                var success = App.UserHandler.ClientUser.TryAdd(user.Login, user, App.UserHandler.URI);
                 if (!success)
                     App.container.Get<INotificationDraw>().ShowNotification(new Notification("Что-то пошло не так. Попробуйте позже снова", NotificationType.Error));
                 else

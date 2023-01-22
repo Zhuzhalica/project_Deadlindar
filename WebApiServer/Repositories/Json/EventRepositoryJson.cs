@@ -17,19 +17,19 @@ namespace Deadlindar.Repositories.Json
 
         public IEnumerable<Event> GetByLogin(string login)
         {
-            return repository.OpenFile<List<Event>>(login);
+            return repository.OpenFile<List<Event>>(login, $"Event{login}");
         }
 
         public void Add(string login, Event deadline)
         {
-            var events = repository.OpenFile<List<Event>>(login);
+            var events = repository.OpenFile<List<Event>>(login, $"Event{login}");
             events.Add(deadline);
-            repository.SaveFile(login, events);
+            repository.SaveFile(login, events, $"Event{login}");
         }
 
         public bool Delete(string login, Event deadline)
         {
-            var events = repository.OpenFile<List<Event>>(login);
+            var events = repository.OpenFile<List<Event>>(login, $"Event{login}");
             var answer = false;
             if (events.Contains(deadline))
             {
@@ -38,7 +38,7 @@ namespace Deadlindar.Repositories.Json
                 answer = true;
             }
             
-            repository.SaveFile(login, events);
+            repository.SaveFile(login, events, $"Event{login}");
             return answer;
         }
     }

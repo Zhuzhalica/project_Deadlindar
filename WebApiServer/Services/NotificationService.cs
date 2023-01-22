@@ -23,6 +23,11 @@ namespace WebAPI.Server.Services
             _notificationRepository.Add(login, notification);
         }
 
+        public bool Read(string login, Notification notification)
+        {
+            return _notificationRepository.Read(login, notification);
+        }
+
         public bool Delete(string login, Notification notification)
         {
             return _notificationRepository.Delete(login, notification);

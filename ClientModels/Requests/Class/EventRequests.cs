@@ -7,22 +7,23 @@ using ValueObjects;
 
 namespace ClientModels
 {
-    public class NotificationRequests: IRequests<Notification>
+    public class EventRequests : IEventRequest
     {
-        private readonly string controllerName = "Notification";
-        public Task<HttpResponseMessage> Get(User user, string uri)
+        private readonly string controllerName = "EventControllers";
+        
+        public Task<HttpResponseMessage> Get(string login, string uri)
         {
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri($"{uri}/{controllerName}/{user.Login}"),
+                RequestUri = new Uri($"{uri}/{controllerName}?Login={login}"),
                 Method = HttpMethod.Get,
             };
             return new Client().SendAsync(request);
         }
 
-        public async Task<HttpResponseMessage> Add(string login, Notification notification, string uri)
+        public Task<HttpResponseMessage> Add(string login, Event _event, string uri)
         {
-            var content = JsonSerializer.Serialize(notification);
+            var content = JsonSerializer.Serialize(_event);
             var request = new HttpRequestMessage()
             {
                 RequestUri = new Uri($"{uri}/{controllerName}/Add?login={login}"),
@@ -31,12 +32,12 @@ namespace ClientModels
             };
             request.Headers.Add("Accept", "application/json");
 
-            return await new Client().SendAsync(request);
+            return new Client().SendAsync(request);
         }
 
-        public async Task<HttpResponseMessage> Delete(string login, Notification notification, string uri)
+        public Task<HttpResponseMessage> Delete(string login, Event _event, string uri)
         {
-            var content = JsonSerializer.Serialize(notification);
+            var content = JsonSerializer.Serialize(_event);
             var request = new HttpRequestMessage()
             {
                 RequestUri = new Uri($"{uri}/{controllerName}/Delete?login={login}"),
@@ -45,7 +46,7 @@ namespace ClientModels
             };
             request.Headers.Add("Accept", "application/json");
 
-            return await new Client().SendAsync(request);
+            return new Client().SendAsync(request);
         }
     }
 }

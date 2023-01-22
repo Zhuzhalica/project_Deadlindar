@@ -7,58 +7,21 @@ using ValueObjects;
 
 namespace ClientModels
 {
-    public class ClientEvents : IDisposable, IPersistingClient
+    public class ClientEvents : IPersistingClient
     {
-        [JsonIgnore] private readonly IRequests<Event> Requests;
-        [JsonIgnore] public IReadOnlyList<Event> Events => _Events.AsReadOnly();
-        private List<Event> _Events { get; set; }
-        private IClientSaver Saver;
+        private readonly IEventRequest requests;
 
-
-        public ClientEvents(IRequests<Event> requests, IClientSaver saver)
+        public ClientEvents(IEventRequest requests)
         {
-            Requests = requests;
-            Saver = saver;
+            this.requests = requests;
         }
 
-        public void Setup(string login)
-        {
-            var clientEvents = Saver.Read<ClientEvents>(login);
-            if (clientEvents != null && clientEvents?._Events != null)
-                _Events = clientEvents._Events;
-            else
-                _Events = new List<Event>();
-        }
-
-        public List<Event>? TryGet(User user, string uri)
+        public List<Event>? TryGet(string login, string uri)
         {
             try
             {
-                var content = Requests.Get(user, uri);
-                List<Event>? events = null;
-                if (content.Result.IsSuccessStatusCode)
-                {
-                    events = ResponseInEvent(content.Result);
-                    if (_Events.Count != 0)
-                    {
-                        foreach (var _event in _Events)
-                        {
-                            if (!events.Contains(_event))
-                            {
-                                TryAdd(user.Login, _event, uri);
-                                events.Add(_event);
-                            }
-                        }
-                    }
-
-                    _Events.Clear();
-                    _Events.AddRange(events);
-                    return events;
-                }
-                else
-                {
-                    return null;
-                }
+                var content = requests.Get(login, uri).Result;
+                return ResponseInEvent(content);
             }
             catch (AggregateException e)
             {
@@ -75,8 +38,7 @@ namespace ClientModels
         {
             try
             {
-                var response = Requests.Add(login, _event, uri);
-                _Events.Add(_event);
+                var response = requests.Add(login, _event, uri);
                 return response.Result.IsSuccessStatusCode;
             }
             catch (AggregateException e)
@@ -89,30 +51,13 @@ namespace ClientModels
         {
             try
             {
-                var response = Requests.Delete(login, _event, uri);
-                if (_Events.Contains(_event))
-                {
-                    var index = _Events.IndexOf(_event);
-                    _Events[index].IsDeleted = true;
-                }
-
+                var response = requests.Delete(login, _event, uri);
                 return response.Result.IsSuccessStatusCode;
             }
             catch (AggregateException e)
             {
                 return false;
             }
-        }
-
-        public void Dispose(User user, string uri)
-        {
-            if (TryGet(user, uri) == null)
-                Saver.Save(user.Login, this);
-            Dispose();
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

@@ -80,7 +80,7 @@ namespace WpfLibrary
                 Foreground = Brushes.Black
             };
 
-            apptDesc.Content = Event.Title;
+            apptDesc.Content = $"{Event.Group}: {Event.Title}";
 
             panel.Children.Add(apptTime);
             panel.Children.Add(apptDesc);

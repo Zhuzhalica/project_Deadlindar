@@ -24,7 +24,7 @@ builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(conne
 builder.Services.AddDbContext<EventContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddSingleton<IJsonRepository, JsonRepositoryIndividual>();
+builder.Services.AddSingleton<IJsonRepository, JsonRepository>();
 
 builder.Services.AddSingleton<INotificationRepository, NotificationRepositoryJson>();
 builder.Services.AddSingleton<IEventRepository, EventRepositoryJson>();

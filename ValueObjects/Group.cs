@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace ValueObjects
 {
@@ -10,12 +11,11 @@ namespace ValueObjects
         public string Name { get; set; }
 
         public Dictionary<string, GroupRole> Members { get; set; }
-
+        [JsonIgnore]
         public ImmutableArray<string> Users => Members.Keys.ToImmutableArray();
         public bool UserIsAdmin(string login) => Users.Contains(login) && Members[login] == GroupRole.Admin;
         public bool UserIsMember(string login) => Users.Contains(login) && Members[login] == GroupRole.Member;
         public GroupRole GetRole(string login) => Members[login];
-        public List<Event> Events { get; set; }
 
         public Group()
         {
@@ -26,7 +26,6 @@ namespace ValueObjects
         {
             Name = name;
             this.Members = members;
-            Events = new List<Event>();
         }
 
         public void AddUser(string login, GroupRole role)

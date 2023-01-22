@@ -25,7 +25,7 @@ namespace WpfLibrary
 
         public static readonly DependencyProperty Color0Property =
             DependencyProperty.Register("Color0", typeof(SolidColorBrush), typeof(ScheduleMonth),
-                new PropertyMetadata(Brushes.LightCyan));
+                new PropertyMetadata(Brushes.Green));
 
 
         public SolidColorBrush Color1

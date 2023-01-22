@@ -9,19 +9,19 @@ namespace ClientModels
 {
     public class ClientUser
     {
-        private readonly IUserRequest Requests;
+        private readonly IUserRequest requests;
         public User User { get; private set; }
 
         public ClientUser(IUserRequest requests)
         {
-            Requests = requests;
+            this.requests = requests;
         }
 
         public User? TryGet(User user, string uri)
         {
             try
             {
-                var content = Requests.Get(user, uri).Result;
+                var content = requests.Get(user, uri).Result;
                 if (content.IsSuccessStatusCode)
                 {
                     User = ResponseInUser(content);
@@ -44,7 +44,7 @@ namespace ClientModels
         {
             try
             {
-                var response = Requests.Add(login, user, uri);
+                var response = requests.Add(login, user, uri);
                 return response.Result.IsSuccessStatusCode;
             }
             catch (AggregateException e)
@@ -57,7 +57,7 @@ namespace ClientModels
         {
             try
             {
-                var response = Requests.Delete(login, user, uri);
+                var response = requests.Delete(login, user, uri);
                 return response.Result.IsSuccessStatusCode;
             }
             catch (AggregateException e)
@@ -70,7 +70,7 @@ namespace ClientModels
         {
             try
             {
-                var response = Requests.CheckLoginExist(user, uri);
+                var response = requests.CheckLoginExist(user, uri);
                 return response.Result.IsSuccessStatusCode;
             }
             catch (AggregateException e)

@@ -7,6 +7,7 @@ namespace WebAPI.Server.Services
     {
         IEnumerable<Notification> GetByLogin(string login);
         void Add(string login, Notification notification);
+        bool Read(string login, Notification notification);
         bool Delete(string login, Notification notification);
     }
 }

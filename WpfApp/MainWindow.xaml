@@ -9,95 +9,241 @@
         Title="MainWindow" Height="540" Width="900">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <TabControl>
             <TabItem Header="Day" Height="23" Margin="-2,-2,-2,-0.2" VerticalAlignment="Bottom">
-                <wpfLibrary:ScheduleDay x:Name="guicScheduleDay" ScheduleItemClick="GuicSchedule_ScheduleItemClick"/>
+                <wpfLibrary:ScheduleDay x:Name="guicScheduleDay" ScheduleItemClick="GuicSchedule_ScheduleItemClick" />
             </TabItem>
             <TabItem Header="Month" Margin="-2,-2,-2.4,-0.2" HorizontalAlignment="Left" Width="46">
-                <wpfLibrary:ScheduleMonth x:Name="guicScheduleMonth"/>
+                <wpfLibrary:ScheduleMonth x:Name="guicScheduleMonth" />
             </TabItem>
         </TabControl>
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <GroupBox Header="Date">
-                <StackPanel Orientation="Vertical">
-                    <DatePicker x:Name="guidDate" SelectedDateChanged="GuidDate_SelectedDateChanged"/>
+        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <GroupBox Header="Date">
+                    <StackPanel Orientation="Vertical">
+                        <DatePicker x:Name="guidDate" SelectedDateChanged="GuidDate_SelectedDateChanged" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Content="Prev" x:Name="guifDatePrev" Click="GuifDatePrev_Click" Grid.Column="0"
+                                    Margin="4" />
+                            <Button Content="Today" x:Name="guifDateToday" Click="GuifDateToday_Click" Grid.Column="1"
+                                    Margin="4" />
+                            <Button Content="Next" x:Name="guifDateNext" Click="GuifDateNext_Click" Grid.Column="2"
+                                    Margin="4" />
+                        </Grid>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox x:Name="guicEvent" Header="Selected Event Details" Margin="4" Grid.Row="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Content="Prev" x:Name="guifDatePrev" Click="GuifDatePrev_Click" Grid.Column="0" Margin="4"/>
-                        <Button Content="Today" x:Name="guifDateToday" Click="GuifDateToday_Click" Grid.Column="1" Margin="4"/>
-                        <Button Content="Next" x:Name="guifDateNext" Click="GuifDateNext_Click" Grid.Column="2" Margin="4"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0" Content="Date:"/>
+                        <Label Grid.Column="0" Grid.Row="1" Content="Start Time:" />
+                        <Label Grid.Column="0" Grid.Row="2" Content="End Time:" />
+                        <Label Grid.Column="0" Grid.Row="3" Content="Title:" />
+                        <Label Grid.Column="0" Grid.Row="4" Content="Description:" />
+                        <Label Grid.Column="0" Grid.Row="5" Content="Type:" />
+                        <Label Grid.Column="0" Grid.Row="6" Content="Group:" />
+                        
+                        <TextBlock x:Name="guiEventSelectDate" Grid.Column="1" Grid.Row="0" Text="{Binding Start, StringFormat={}{0:D}}" />
+                        <TextBlock x:Name="guiEventSelectStart" Grid.Column="1" Grid.Row="1" Text="{Binding Start, StringFormat={}{0:t}}" />
+                        <TextBlock x:Name="guiEventSelectEnd" Grid.Column="1" Grid.Row="2" Text="{Binding End, StringFormat={}{0:t}}" />
+                        <TextBlock x:Name="guiEventSelectTitle" Grid.Column="1" Grid.Row="3" Text="{Binding Title}" />
+                        <TextBlock x:Name="guiEventSelectDescription" Grid.Column="1" Grid.Row="4" Text="{Binding Description}" />
+                        <TextBlock x:Name="guiEventSelectType" Grid.Column="1" Grid.Row="5" Text="{Binding Title}" />
+                        <TextBlock x:Name="guiEventSelectGroup" Grid.Column="1" Grid.Row="6" Text="{Binding Description}" />
                     </Grid>
+                </GroupBox>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="4">
+                    <Button Content="New Event" x:Name="guifEventNew" Click="GuiEventNew_Click" Margin="8,0,0,0" />
+                    <Button Content="Change Event" x:Name="guiEventChange" Click="GuiEventChange_Click"
+                            Margin="8,0,0,0" IsEnabled="False" />
+                    <Button Content="Delete Event" x:Name="guifEventDelete" Click="GuiEventDelete_Click"
+                            Margin="8,0,0,0" IsEnabled="False" />
                 </StackPanel>
-            </GroupBox>
-            <GroupBox x:Name="guicEvent" Header="Selected Event Details" Margin="4" Grid.Row="1">
-                <Grid>
+                <GroupBox x:Name="guicEventEdit" Header="Event" Margin="4" Grid.Row="3">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0" Content="Date:" />
+                        <Label Grid.Column="0" Grid.Row="1" Content="Start Time:" />
+                        <Label Grid.Column="0" Grid.Row="2" Content="End Time:" />
+                        <Label Grid.Column="0" Grid.Row="3" Content="Title:" />
+                        <Label Grid.Column="0" Grid.Row="4" Content="Description:" />
+                        <Label Grid.Column="0" Grid.Row="5" Content="Type:" />
+                        <Label Grid.Column="0" Grid.Row="6" Content="Group:" />
+                        <DatePicker x:Name="guiEventEditDate" Grid.Column="1" Grid.Row="0" />
+                        <TextBox x:Name="guiEventEditStart" Grid.Column="1" Grid.Row="1" />
+                        <TextBox x:Name="guiEventEditEnd" Grid.Column="1" Grid.Row="2" />
+                        <TextBox x:Name="guiEventEditTitle" Grid.Column="1" Grid.Row="3" />
+                        <TextBox x:Name="guiEventEditDesc" Grid.Column="1" Grid.Row="4" />
+                        <ComboBox x:Name="guiEventEditType" Grid.Column="1" Grid.Row="5" />
+                        <ComboBox x:Name="guiEventEditGroup" Grid.Column="1" Grid.Row="6" />
+                        <Grid Grid.Column="1" Grid.Row="7">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="100" />
+                                <ColumnDefinition Width="Auto" MinWidth="100" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="guiEventEditSave" Click="GuiEventEditSave_Click" Grid.Column="0"
+                                    Content="Save" HorizontalAlignment="Left" Width="100" />
+                            <Button x:Name="guiEventEditCancel" Click="GuiEventEditCancel_Click" Grid.Column="1"
+                                    Content="Cancel" HorizontalAlignment="Left" Width="100" />
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+                <StackPanel Orientation="Horizontal" Grid.Row="4" Margin="4">
+                    <Button Content="New Group" x:Name="guifGroupNew" Click="GuiGroupNew_Click" Margin="8,0,0,0" />
+                </StackPanel>
+                <GroupBox x:Name="guiGroupCreate" Header="Group" Margin="4" Grid.Row="5" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MinWidth="100" />
+                            <ColumnDefinition Width="Auto" MinWidth="100" />
+                            <ColumnDefinition Width="Auto" MinWidth="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0" Content="Name:" />
+                        <Label Grid.Column="0" Grid.Row="1" Content="Members:" />
+                        <TextBox x:Name="guiGroupCreateName" Grid.Column="1" Grid.Row="0" />
+                        <TextBox x:Name="guiGroupMember1" Grid.Column="1" Grid.Row="1" />
+                        <TextBox x:Name="guiGroupMember2" Grid.Column="1" Grid.Row="2" />
+                        <TextBox x:Name="guiGroupMember3" Grid.Column="1" Grid.Row="3" />
+                        <TextBox x:Name="guiGroupMember4" Grid.Column="1" Grid.Row="4" />
+                        <ComboBox x:Name="guiGroupMemberRole1" Grid.Column="2" Grid.Row="1" />
+                        <ComboBox x:Name="guiGroupMemberRole2" Grid.Column="2" Grid.Row="2" />
+                        <ComboBox x:Name="guiGroupMemberRole3" Grid.Column="2" Grid.Row="3" />
+                        <ComboBox x:Name="guiGroupMemberRole4" Grid.Column="2" Grid.Row="4" />
+                        <Grid Grid.Column="2" Grid.Row="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="50" />
+                                <ColumnDefinition Width="Auto" MinWidth="50" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="guiGroupCreateSave" Click="GuiGroupCreateSave_Click" Grid.Column="0"
+                                    Content="Save" HorizontalAlignment="Left" Width="100" />
+                            <Button x:Name="guiGroupCreateCancel" Click="GuiGroupCreateCancel_Click" Grid.Column="1"
+                                    Content="Cancel" HorizontalAlignment="Left" Width="100" />
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+
+                <Grid Grid.Row="6" Margin="4">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" MinWidth="100" />
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Column="0" Grid.Row="0" Content="Date:"/>
-                    <Label Grid.Column="0" Grid.Row="1" Content="Start Time:"/>
-                    <Label Grid.Column="0" Grid.Row="2" Content="End Time:"/>
-                    <Label Grid.Column="0" Grid.Row="3" Content="Title:"/>
-                    <Label Grid.Column="0" Grid.Row="4" Content="Description:"/>
-                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Start, StringFormat={}{0:D}}"/>
-                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Start, StringFormat={}{0:t}}"/>
-                    <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding End, StringFormat={}{0:t}}"/>
-                    <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding Title}"/>
-                    <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding Description}"/>
+                    <Label Grid.Column="0" Grid.Row="0" Content="Group:" />
+                    <ComboBox x:Name="guiGroupsComboBox" Grid.Column="1" Grid.Row="0"
+                              SelectionChanged="GuiGroupsComboBox_OnSelectionChanged" />
                 </Grid>
-            </GroupBox>
-            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="4">
-                <Button Content="New Event" x:Name="guifEventNew" Click="GuiEventNew_Click" Margin="8,0,0,0"/>
-                <Button Content="Delete Event" x:Name="guifEventDelete" Click="GuiEventDelete_Click" Margin="8,0,0,0" IsEnabled="False"/>
-            </StackPanel>
-            <GroupBox x:Name="guicEventEdit" Header="New Event" Margin="4" Grid.Row="3">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Column="0" Grid.Row="0" Content="Date:"/>
-                    <Label Grid.Column="0" Grid.Row="1" Content="Start Time:"/>
-                    <Label Grid.Column="0" Grid.Row="2" Content="End Time:"/>
-                    <Label Grid.Column="0" Grid.Row="3" Content="Title:"/>
-                    <Label Grid.Column="0" Grid.Row="4" Content="Description:"/>
-                    <DatePicker x:Name="guiEventEditDate" Grid.Column="1" Grid.Row="0"/>
-                    <TextBox x:Name="guiEventEditStart" Grid.Column="1" Grid.Row="1"/>
-                    <TextBox x:Name="guiEventEditEnd" Grid.Column="1" Grid.Row="2"/>
-                    <TextBox x:Name="guiEventEditTitle" Grid.Column="1" Grid.Row="3"/>
-                    <TextBox x:Name="guiEventEditDesc" Grid.Column="1" Grid.Row="4"/>
-                    <Button x:Name="guiEventEditSave" Click="GuiEventEditSave_Click" Grid.Column="1" Grid.Row="5" Content="Save" HorizontalAlignment="Left" Width="100"/>
-                </Grid>
-            </GroupBox>
-        </Grid>
+
+                <GroupBox x:Name="guiGroupEdit" Header="Group" Margin="4" Grid.Row="7" Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MinWidth="100" />
+                            <ColumnDefinition Width="Auto" MinWidth="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="100" />
+                                <ColumnDefinition Width="Auto" MinWidth="100" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="guiGroupAddUser" Click="GuiGroupAddUser_Click" Grid.Column="0" Grid.Row="0"
+                                    Content="Add user" HorizontalAlignment="Left" Width="100" />
+                            <Button x:Name="guiGroupRemoveUser" Click="GuiGroupRemoveUser_Click" Grid.Column="0"
+                                    Grid.Row="1"
+                                    Content="Remove user" HorizontalAlignment="Left" Width="100" />
+                            <Button x:Name="guiGroupChangeRole" Click="GuiGroupChangeRole_Click" Grid.Column="0"
+                                    Grid.Row="4"
+                                    Content="Change role" HorizontalAlignment="Left" Width="100" />
+                            <Grid x:Name="OptionGridGroupEdit" Grid.Row="0" Grid.Column="1" Visibility="Collapsed">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MinWidth="100" />
+                                    <ColumnDefinition Width="Auto" MinWidth="100" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Label Grid.Column="0" Grid.Row="0" Content="Login:" />
+                                <Label Grid.Column="0" Grid.Row="1" Content="Role:" />
+                                <TextBox x:Name="guiGroupEditNameText" Grid.Column="1" Grid.Row="0"
+                                         Visibility="Collapsed" />
+                                <ComboBox x:Name="guiGroupEditRole" Grid.Column="1" Grid.Row="1" Visibility="Collapsed" />
+                                <ComboBox x:Name="guiGroupEditNameBox" Grid.Column="1" Grid.Row="0"
+                                          Visibility="Collapsed" />
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Column="1" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="50" />
+                                <ColumnDefinition Width="Auto" MinWidth="50" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="guiGroupEditSave" Click="GuiGroupEditSave_Click" Grid.Column="0"
+                                    Content="Save" HorizontalAlignment="Left" Width="100" />
+                            <Button x:Name="guiGroupEditCancel" Click="GuiGroupEditCancel_Click" Grid.Column="1"
+                                    Content="Cancel" HorizontalAlignment="Left" Width="100" />
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>

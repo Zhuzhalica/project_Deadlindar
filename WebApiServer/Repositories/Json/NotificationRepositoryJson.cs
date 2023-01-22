@@ -16,29 +16,43 @@ namespace Deadlindar.Repositories.Json
 
         public IEnumerable<Notification> GetByLogin(string login)
         {
-            return repository.OpenFile<List<Notification>>(login);
+            return repository.OpenFile<List<Notification>>(login, $"Notification{login}");
         }
 
         public void Add(string login, Notification notification)
         {
-            var notifications =repository.OpenFile<List<Notification>>(login);
+            var notifications =repository.OpenFile<List<Notification>>(login, $"Notification{login}");
             notifications.Add(notification);
-            repository.SaveFile(login, notifications);
+            repository.SaveFile(login, notifications, $"Notification{login}");
         }
 
-        public bool Delete(string login, Notification notification)
+        public bool Read(string login, Notification notification)
         {
-            var notifications = repository.OpenFile<List<Notification>>(login);
+            var notifications = repository.OpenFile<List<Notification>>(login, $"Notification{login}");
             var answer = false;
             var t = Equals(notifications[0], notification);
             if (notifications.Contains(notification))
             {
                 var ind = notifications.IndexOf(notification);
-                notifications[ind].IsDeleted = true;
+                notifications[ind].IsRead = true;
                 answer = true;
             }
             
-            repository.SaveFile(login, notifications);
+            repository.SaveFile(login, notifications, $"Notification{login}");
+            return answer;
+        }
+
+        public bool Delete(string login, Notification notification)
+        {
+            var notifications = repository.OpenFile<List<Notification>>(login, $"Notification{login}");
+            var answer = false;
+            if (notifications.Contains(notification))
+            {
+                notifications.Remove(notification);
+                answer = true;
+            }
+            
+            repository.SaveFile(login, notifications, $"Notification{login}");
             return answer;
         }
     }

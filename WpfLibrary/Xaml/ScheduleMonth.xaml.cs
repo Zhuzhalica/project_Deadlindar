@@ -51,12 +51,13 @@ namespace WpfLibrary
         public event EventHandler<CalendarEventView> CalendarEventDoubleClickedEvent;
 
         public ObservableCollection<CalendarDay> DaysInCurrentMonth { get; set; }
+        private List<Event> Events;
 
-        public void CalendarMonth()
+        public void CalendarMonth(List<Event> events)
         {
             InitializeComponent();
             DaysInCurrentMonth = new ObservableCollection<CalendarDay>();
-            EventItems = new List<ScheduleItem>();
+            Events = events;
             InitializeDayLabels();
             InitializeDateSelectionComboBoxes();
         }
@@ -234,76 +235,76 @@ namespace WpfLibrary
 
         private void DrawEvents()
         {
-            // // this method can be called when Events is not binded yet. So check that case and return
-            // if (Events == null)
-            // {
-            //     return;
-            // }
-            //
-            // // when Events is binded, check if it is collection of ICalendarEvent (events must have DateFrom and DateTo)
-            // if (Events is IEnumerable<Event> events)
-            // {
-            //     // add colors of events to array, to pick up them using number
-            //     SolidColorBrush[] colors = {Color0, Color1, Color2};
-            //
-            //     // index to array of colors
-            //     int accentColor = 0;
-            //
-            //     // loop all events
-            //     foreach (var e in events.OrderBy(e => e.TimeInterval.startTime.Date))
-            //     {
-            //         // if (!e.TimeInterval.startTime.Ha || !e.DateTo.HasValue)
-            //         // {
-            //         //     continue;
-            //         // }
-            //
-            //         // number of row in day, in which event should be displayed
-            //         var eventRow = 0;
-            //
-            //         var dateFrom = (DateTime) e.TimeInterval.startTime;
-            //         var dateTo = (DateTime) e.TimeInterval.endTime;
-            //
-            //         // loop all days of current event
-            //         var date = dateFrom;
-            //         for (; date <= dateTo; date = date.AddDays(1))
-            //         {
-            //             // get DayOfWeek for current day of current event
-            //             CalendarDay day = DaysInCurrentMonth.Where(d => d.Date.Date == date.Date).FirstOrDefault();
-            //
-            //             // day is in another mont, so skip it
-            //             if (day == null)
-            //             {
-            //                 continue;
-            //             }
-            //
-            //             // if the DayOfWeek is Monday, event shloud be displayed on first row
-            //             if (day.Date.DayOfWeek == DayOfWeek.Monday)
-            //             {
-            //                 eventRow = 0;
-            //             }
-            //
-            //             // but if there are some events before, event won't be on the first row, but after previous events
-            //             if (day.Events.Children.Count > eventRow)
-            //             {
-            //                 eventRow = Grid.GetRow(day.Events.Children[day.Events.Children.Count - 1]) + 1;
-            //             }
-            //
-            //             // get color for event
-            //             var accentColorIndex = accentColor % colors.Count();
-            //             CalendarEventView calendarEventView = new CalendarEventView(colors[accentColorIndex], this);
-            //
-            //             calendarEventView.DataContext = e;
-            //             Grid.SetRow(calendarEventView, eventRow);
-            //             day.Events.Children.Add(calendarEventView);
-            //         }
-            //
-            //         accentColor++;
-            //     }
-            // }
-            // else
-            // {
-            //     throw new ArgumentException("Events must be IEnumerable<ICalendarEvent>");
-            // }
+            // this method can be called when Events is not binded yet. So check that case and return
+            if (Events.Count == 0)
+            {
+                return;
+            }
+            
+            // when Events is binded, check if it is collection of ICalendarEvent (events must have DateFrom and DateTo)
+            if (Events is IEnumerable<Event> events)
+            {
+                // add colors of events to array, to pick up them using number
+                SolidColorBrush[] colors = {Color0, Color1, Color2};
+            
+                // index to array of colors
+                int accentColor = 0;
+            
+                // loop all events
+                foreach (var e in events.OrderBy(e => e.TimeInterval.startTime.Date))
+                {
+                    // if (!e.TimeInterval.startTime.Ha || !e.DateTo.HasValue)
+                    // {
+                    //     continue;
+                    // }
+            
+                    // number of row in day, in which event should be displayed
+                    var eventRow = 0;
+            
+                    var dateFrom = (DateTime) e.TimeInterval.startTime;
+                    var dateTo = (DateTime) e.TimeInterval.endTime;
+            
+                    // loop all days of current event
+                    var date = dateFrom;
+                    for (; date <= dateTo; date = date.AddDays(1))
+                    {
+                        // get DayOfWeek for current day of current event
+                        CalendarDay day = DaysInCurrentMonth.Where(d => d.Date.Date == date.Date).FirstOrDefault();
+            
+                        // day is in another mont, so skip it
+                        if (day == null)
+                        {
+                            continue;
+                        }
+            
+                        // if the DayOfWeek is Monday, event shloud be displayed on first row
+                        if (day.Date.DayOfWeek == DayOfWeek.Monday)
+                        {
+                            eventRow = 0;
+                        }
+            
+                        // but if there are some events before, event won't be on the first row, but after previous events
+                        if (day.Events.Children.Count > eventRow)
+                        {
+                            eventRow = Grid.GetRow(day.Events.Children[day.Events.Children.Count - 1]) + 1;
+                        }
+            
+                        // get color for event
+                        var accentColorIndex = accentColor % colors.Count();
+                        var calendarEventView = new CalendarEventView(Brushes.Blue, this);
+            
+                        calendarEventView.DataContext = e;
+                        Grid.SetRow(calendarEventView, eventRow);
+                        day.Events.Children.Add(calendarEventView);
+                    }
+            
+                    accentColor++;
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Events must be IEnumerable<Event>");
+            }
         }
 
         private void PreviousMonthButton_OnClick(object sender, RoutedEventArgs e)
